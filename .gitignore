@@ -1,0 +1,55 @@
+﻿# === SENSITIVE FILES - DO NOT PUSH ===
+
+api_keys.php
+.env
+.env.local
+.env.production
+.env.development
+
+# === Database Config Files ===
+db-config.local.php
+db-config2.php
+
+# === Postman/Collection files that contain secrets ===
+*.postman_collection.json
+*.postman_collection_v2
+
+# === Django or Python-related (if included) ===
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+
+# === Node.js (if I add frontend later) ===
+node_modules/
+npm-debug.log
+.yarn/
+
+# === Vendor folders (PHP Composer) ===
+vendor/
+
+# === System files ===
+.DS_Store
+Thumbs.db
+
+# === Logs ===
+logs/
+*.log
+
+# === IDE files ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# === Large Media Files ===
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.wmv
+
+# === Uploads ===
+uploads/

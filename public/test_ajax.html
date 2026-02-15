@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>AJAX Test</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+
+<body>
+    <h1>Testing AJAX Endpoint</h1>
+    <p>Country ID for Zambia: <input type="number" id="countryId" value="195" /></p>
+    <button onclick="testAjax()">Test AJAX Call</button>
+    <div id="result" style="margin-top: 20px; padding: 20px; background: #f0f0f0;"></div>
+
+    <script>
+        function testAjax() {
+            var countryId = $('#countryId').val();
+            $('#result').html('Loading...');
+
+            $.ajax({
+                url: 'ajax.get_states.php',
+                type: 'GET',
+                data: { country_id: countryId },
+                dataType: 'json',
+                success: function (response) {
+                    $('#result').html('<pre>' + JSON.stringify(response, null, 2) + '</pre>');
+                },
+                error: function (xhr, status, error) {
+                    $('#result').html(
+                        '<strong>Error:</strong><br>' +
+                        'Status: ' + status + '<br>' +
+                        'Error: ' + error + '<br>' +
+                        'Response: <pre>' + xhr.responseText + '</pre>'
+                    );
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

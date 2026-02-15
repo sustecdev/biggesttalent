@@ -1,0 +1,58 @@
+/* Enhanced Form Input Focus States */
+.form-input:focus,
+.form-select:focus {
+    outline: none;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(205, 33, 125, 0.1) !important;
+}
+
+/* Submit Button Hover */
+#btnsubmit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(205, 33, 125, 0.4) !important;
+}
+
+#btnsubmit:active {
+    transform: translateY(0);
+}
+
+/* Radio Button Label Hover */
+.upload-option label:hover {
+    border-color: var(--primary) !important;
+    background: rgba(205, 33, 125, 0.03) !important;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Form Field Animations */
+.form-input,
+.form-select {
+    transition: all 0.2s ease;
+}
+
+.form-input:hover,
+.form-select:hover {
+    border-color: rgba(205, 33, 125, 0.3);
+}
+
+/* Alert Animations */
+.alert {
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

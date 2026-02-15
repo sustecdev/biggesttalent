@@ -1,0 +1,26 @@
+# Options +SymLinksIfOwnerMatch -MultiViews
+RewriteEngine On
+
+# Force HTTPS on production
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP_HOST} !^localhost [NC]
+RewriteCond %{HTTP_HOST} !^127\.0\.0\.1 [NC]
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Legacy: If segment is numeric, treat as pernum
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !\.php$ [NC]
+RewriteRule ^([0-9]+)$ index.php?pernum=$1 [L,QSA]
+
+# MVC: All other non-file requests go to index.php with url param
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php?url=$1 [L,QSA]
+
+# PHP Upload Configuration
+php_value upload_max_filesize 100M
+php_value post_max_size 110M
+php_value max_execution_time 300
+php_value max_input_time 300
+php_value memory_limit 256M
