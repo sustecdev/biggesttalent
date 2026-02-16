@@ -32,8 +32,8 @@ jobs:
           set -e
           cd /home/biggesttalentafrica/domains/dev.biggesttalent.africa/public_html
           
-          # Set Git remote to use SSH instead of HTTPS
-          git remote set-url origin git@github.com:sustecdev/shobbit.git
+          # Set Git remote to use SSH instead of HTTPS - CORRECTED REPO
+          git remote set-url origin git@github.com:sustecdev/bta_africa.git
           
           git fetch origin
           git reset --hard origin/development
@@ -58,3 +58,10 @@ jobs:
           echo '❌ Deployment failed - check logs above'
           exit 1
         fi
+```
+
+## Important: Make sure this workflow file is in the `bta_africa` repository
+
+This workflow should be located at:
+```
+sustecdev/bta_africa/.github/workflows/deploy.yml
