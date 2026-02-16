@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title><?= isset($data['page_title']) ? htmlspecialchars($data['page_title']) . ' – ' : '' ?>BIGGEST TALENT AFRICA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <?php
@@ -98,7 +98,7 @@
 </head>
 
 <body
-    style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: #FFFFFF; min-height: 100vh; display: flex; flex-direction: column;">
+    style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: #FFFFFF; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; -webkit-text-size-adjust: 100%;">
     <?php if (empty($data['hide_nav'])): ?>
         <nav
             class="sticky top-0 left-0 right-0 z-[1000] bg-[rgba(10,10,10,0.98)] backdrop-blur-[20px] border-b border-white/10 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">

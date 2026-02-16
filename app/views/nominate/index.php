@@ -278,18 +278,6 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="age" class="form-label">
-                                                Age <span class="required"
-                                                    style="color: var(--primary);">*</span>
-                                            </label>
-                                            <input type="number" class="form-input" id="age" name="age"
-                                                placeholder="Enter age (years)" min="1" max="120" required>
-                                            <p class="form-hint"
-                                                style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
-                                                Age of the nominated contestant</p>
-                                        </div>
-
-                                        <div class="form-group">
                                             <label for="nominee_email" class="form-label">
                                                 Nominee's Email
                                             </label>

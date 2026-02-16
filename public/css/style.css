@@ -2754,3 +2754,66 @@ div.stat-value-ref {
         padding-bottom: 90px !important;
     }
 }
+
+/* ============================================
+   AUTH PAGES - All Mobile Screens & Touch
+   ============================================ */
+.touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Auth card - prevent squish on very narrow screens */
+.auth-card-wrapper {
+    min-width: 0;
+    padding-left: env(safe-area-inset-left, 0);
+    padding-right: env(safe-area-inset-right, 0);
+}
+
+/* Ensure auth inputs don't zoom on focus (iOS) - 16px min prevents zoom */
+@media (max-width: 480px) {
+    .auth-card-wrapper input[type="text"],
+    .auth-card-wrapper input[type="email"],
+    .auth-card-wrapper input[type="password"],
+    .auth-card-wrapper input[type="number"] {
+        font-size: 16px !important;
+    }
+}
+
+/* Very small screens (320px - e.g. iPhone SE, small Android) */
+@media (max-width: 360px) {
+    .auth-card-wrapper .text-2xl {
+        font-size: 1.25rem !important;
+    }
+    .auth-card-wrapper .space-y-4 > * + * {
+        margin-top: 0.75rem;
+    }
+}
+
+/* Landscape - short viewport - ensure scroll works */
+@media (max-height: 500px) and (orientation: landscape) {
+    main.flex-grow {
+        align-items: flex-start;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+    .auth-card-wrapper .mb-6,
+    .auth-card-wrapper .mb-8 {
+        margin-bottom: 1rem !important;
+    }
+    .auth-card-wrapper .mt-8 {
+        margin-top: 1rem !important;
+    }
+}
+
+/* Auth form container - smooth scroll on iOS */
+main.flex-grow {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: hidden;
+}
+
+/* Modal safe areas - all sides */
+#coming-soon-modal {
+    padding-left: max(1rem, env(safe-area-inset-left)) !important;
+    padding-right: max(1rem, env(safe-area-inset-right)) !important;
+}
