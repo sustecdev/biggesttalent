@@ -29,7 +29,7 @@
 
             <!-- Subtitle -->
             <p class="text-base sm:text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto mb-8 leading-relaxed font-light">
-                Showcaseee your extraordinary talent on Africa's biggest stage. Compete for fame, fortune, and national
+                Showcaseeee your extraordinary talent on Africa's biggest stage. Compete for fame, fortune, and national
                 recognition.
             </p>
 
