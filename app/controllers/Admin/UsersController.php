@@ -17,8 +17,9 @@ class UsersController extends BaseController
         $users = $this->userModel->getAll(500);
 
         $data = [
-            'title' => 'Users Management',
-            'users' => $users
+            'title' => 'Users & Roles',
+            'users' => $users,
+            'is_super_admin' => $this->isSuperAdmin()
         ];
 
         $this->renderAdmin('admin/users/index', $data);
@@ -33,17 +34,31 @@ class UsersController extends BaseController
             return;
         }
 
-        $uid = $_POST['uid'] ?? 0;
-        $role = $_POST['role'] ?? '';
+        $uid = (int) ($_POST['uid'] ?? 0);
+        $role = trim($_POST['role'] ?? '');
+        $currentRole = $_SESSION['role'] ?? 'user';
+        $isSuperAdmin = $currentRole === 'super_admin';
 
         if (!$uid || !$role) {
             echo json_encode(['success' => false, 'message' => 'Missing parameters']);
             return;
         }
 
-        if ($uid == $_SESSION['uid'] && $role !== 'admin') {
-            echo json_encode(['success' => false, 'message' => 'Cannot remove your own admin role']);
+        $allowedRoles = ['user', 'banned'];
+        if ($isSuperAdmin) {
+            $allowedRoles = ['user', 'admin', 'super_admin', 'banned'];
+        }
+
+        if (!in_array($role, $allowedRoles, true)) {
+            echo json_encode(['success' => false, 'message' => 'You do not have permission to set this role. Only Super Admin can add admins.']);
             return;
+        }
+
+        if ($uid == $_SESSION['uid']) {
+            if ($role !== 'super_admin' && $role !== 'admin') {
+                echo json_encode(['success' => false, 'message' => 'Cannot remove your own admin role']);
+                return;
+            }
         }
 
         if ($this->userModel->updateRole($uid, $role)) {
@@ -62,7 +77,8 @@ class UsersController extends BaseController
             return;
         }
 
-        $uid = $_POST['uid'] ?? 0;
+        $uid = (int) ($_POST['uid'] ?? 0);
+        $isSuperAdmin = $this->isSuperAdmin();
 
         if (!$uid) {
             echo json_encode(['success' => false, 'message' => 'Missing UID']);
@@ -71,6 +87,12 @@ class UsersController extends BaseController
 
         if ($uid == $_SESSION['uid']) {
             echo json_encode(['success' => false, 'message' => 'Cannot ban yourself']);
+            return;
+        }
+
+        $targetUser = $this->userModel->findById($uid);
+        if ($targetUser && in_array($targetUser['role'] ?? '', ['admin', 'super_admin'], true) && !$isSuperAdmin) {
+            echo json_encode(['success' => false, 'message' => 'Only Super Admin can ban admins']);
             return;
         }
 
@@ -90,7 +112,8 @@ class UsersController extends BaseController
             return;
         }
 
-        $uid = $_POST['id'] ?? 0;
+        $uid = (int) ($_POST['id'] ?? 0);
+        $isSuperAdmin = $this->isSuperAdmin();
 
         if (!$uid) {
             echo json_encode(['success' => false, 'message' => 'Missing ID']);
@@ -99,6 +122,12 @@ class UsersController extends BaseController
 
         if ($uid == $_SESSION['uid']) {
             echo json_encode(['success' => false, 'message' => 'Cannot delete yourself']);
+            return;
+        }
+
+        $targetUser = $this->userModel->findById($uid);
+        if ($targetUser && in_array($targetUser['role'] ?? '', ['admin', 'super_admin'], true) && !$isSuperAdmin) {
+            echo json_encode(['success' => false, 'message' => 'Only Super Admin can delete admins']);
             return;
         }
 

@@ -1,5 +1,8 @@
 <div class="admin-page-header">
-    <h2>All Users</h2>
+    <h2>Users & Roles</h2>
+    <?php if (!empty($data['is_super_admin'])): ?>
+        <p class="text-muted" style="margin-top: 4px; font-size: 13px;">You are Super Admin. Only you can add or remove admins.</p>
+    <?php endif; ?>
     <div class="page-actions">
         <input type="text" class="form-control" id="searchUsers" placeholder="Search users..."
             style="display: inline-block; width: 300px;">
@@ -43,18 +46,34 @@
                             <?= htmlspecialchars($user['country'] ?? 'N/A') ?>
                         </td>
                         <td>
-                            <select class="form-control role-update" data-uid="<?= $user['uid'] ?>" style="width: 120px;">
-                                <option value="user" <?= ($user['role'] ?? 'user') == 'user' ? 'selected' : '' ?>>User</option>
-                                <option value="admin" <?= ($user['role'] ?? 'user') == 'admin' ? 'selected' : '' ?>>Admin</option>
-                                <option value="banned" <?= ($user['role'] ?? 'user') == 'banned' ? 'selected' : '' ?>>Banned
-                                </option>
+                            <?php
+                            $userRole = $user['role'] ?? 'user';
+                            $isSuperAdmin = !empty($data['is_super_admin']);
+                            $canEditAdmins = $isSuperAdmin; // Only super_admin can change admin roles
+                            $isAdminUser = in_array($userRole, ['admin', 'super_admin'], true);
+                            $disabled = ($isAdminUser && !$canEditAdmins) ? 'disabled' : '';
+                            ?>
+                            <select class="form-control role-update" data-uid="<?= $user['uid'] ?>" style="width: 140px;" <?= $disabled ?>>
+                                <option value="user" <?= $userRole == 'user' ? 'selected' : '' ?>>User</option>
+                                <?php if ($isSuperAdmin): ?>
+                                    <option value="admin" <?= $userRole == 'admin' ? 'selected' : '' ?>>Admin</option>
+                                    <option value="super_admin" <?= $userRole == 'super_admin' ? 'selected' : '' ?>>Super Admin</option>
+                                <?php endif; ?>
+                                <option value="banned" <?= $userRole == 'banned' ? 'selected' : '' ?>>Banned</option>
                             </select>
+                            <?php if ($isAdminUser && !$canEditAdmins): ?>
+                                <small class="text-muted" style="display:block;margin-top:4px;">Only Super Admin can change</small>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <div class="action-buttons">
-                                <button class="btn-admin btn-sm btn-danger btn-delete" data-id="<?= $user['uid'] ?>"
-                                    data-type="user">Delete</button>
-                                <button class="btn-admin btn-sm btn-warning" onclick="banUser(<?= $user['uid'] ?>)">Ban</button>
+                                <?php if (!$isAdminUser || $canEditAdmins): ?>
+                                    <button class="btn-admin btn-sm btn-danger btn-delete" data-id="<?= $user['uid'] ?>"
+                                        data-type="user">Delete</button>
+                                    <button class="btn-admin btn-sm btn-warning" onclick="banUser(<?= $user['uid'] ?>)">Ban</button>
+                                <?php else: ?>
+                                    <span class="text-muted" style="font-size:12px;">—</span>
+                                <?php endif; ?>
                             </div>
                         </td>
                     </tr>

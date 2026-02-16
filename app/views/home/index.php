@@ -1,5 +1,6 @@
 <main class="main-content">
     <?php require APPROOT . '/views/home/partials/hero.php'; ?>
+    <?php require APPROOT . '/views/home/partials/how_to_enter.php'; ?>
     <?php require APPROOT . '/views/home/partials/phases.php'; ?>
     <?php require APPROOT . '/views/home/partials/judges.php'; ?>
     <?php require APPROOT . '/views/home/partials/rules.php'; ?>

@@ -54,8 +54,8 @@
                         Vote Now
                     </a>
                 <?php endif; ?>
-                <a href="#phases" class="hero-cta-outline w-full sm:w-auto">
-                    Learn More
+                <a href="#how-to-enter" class="hero-cta-outline w-full sm:w-auto">
+                    How to Enter
                 </a>
             </div>
         </div>
@@ -82,7 +82,7 @@
         </div>
 
         <!-- Scroll Indicator -->
-        <a href="#phases" class="hero-scroll-indicator flex flex-col items-center gap-2 mt-8 text-gray-500 hover:text-[#cd217d] transition-colors">
+        <a href="#how-to-enter" class="hero-scroll-indicator flex flex-col items-center gap-2 mt-8 text-gray-500 hover:text-[#cd217d] transition-colors">
             <span class="text-xs uppercase tracking-widest">Discover</span>
             <svg class="w-6 h-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>

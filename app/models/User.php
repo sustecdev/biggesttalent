@@ -51,11 +51,17 @@ class User
 
     /**
      * Update user role
+     * @param int $uid User ID
+     * @param string $role One of: user, admin, super_admin, banned
      */
     public function updateRole($uid, $role)
     {
         $uid = (int) $uid;
         $role = $this->db->real_escape_string($role);
+
+        if (!in_array($role, ['user', 'admin', 'super_admin', 'banned'], true)) {
+            return false;
+        }
 
         // Ensure role column exists
         $this->ensureRoleColumn();

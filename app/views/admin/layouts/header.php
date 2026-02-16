@@ -119,7 +119,7 @@
 
                 <a href="<?= URLROOT ?>/admin/users"
                     class="admin-nav-item <?= (strpos($_SERVER['REQUEST_URI'], 'admin/users') !== false) ? 'active' : '' ?>">
-                    <span class="nav-text">Users</span>
+                    <span class="nav-text">Users & Roles</span>
                 </a>
 
                 <a href="<?= URLROOT ?>/admin/categories"

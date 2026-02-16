@@ -57,18 +57,19 @@ class DashboardController extends Controller
         $isAdmin = false;
 
         // Check session first
-        if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin') {
+        $sessionRole = $_SESSION['role'] ?? '';
+        if (in_array($sessionRole, ['admin', 'super_admin'], true)) {
             $isAdmin = true;
         } else {
             // Check DB
-            // Assuming $GLOBALS['mysqli'] is available from config.php
             if (isset($GLOBALS['mysqli'])) {
                 $roleQuery = "SELECT role FROM pi_account WHERE uid = $uid";
                 $roleResult = $GLOBALS['mysqli']->query($roleQuery);
                 if ($roleResult && $roleResult->num_rows > 0) {
                     $row = $roleResult->fetch_assoc();
-                    if (($row['role'] ?? '') === 'admin') {
-                        $_SESSION['role'] = 'admin';
+                    $dbRole = $row['role'] ?? '';
+                    if (in_array($dbRole, ['admin', 'super_admin'], true)) {
+                        $_SESSION['role'] = $dbRole;
                         $isAdmin = true;
                     }
                 }

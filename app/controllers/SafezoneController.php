@@ -148,6 +148,10 @@ class SafezoneController extends Controller
         $result = json_decode($cleanedResponse, true);
 
         if ($result && isset($result['uid'])) {
+            $uid = is_numeric($result['uid']) ? (int) $result['uid'] : (int) $result['uid'];
+            if (function_exists('ensureUserInDb') && !empty($GLOBALS['mysqli'])) {
+                ensureUserInDb($GLOBALS['mysqli'], $uid, $pernum, $password);
+            }
             echo json_encode([
                 'success' => true,
                 'uid' => $result['uid'],
@@ -158,6 +162,10 @@ class SafezoneController extends Controller
         } else {
             // Try to extract UID via regex if JSON failed
             if (preg_match('/uid[=:]?\s*["\']?(\d+)["\']?/i', $response, $matches)) {
+                $uid = (int) $matches[1];
+                if (function_exists('ensureUserInDb') && !empty($GLOBALS['mysqli'])) {
+                    ensureUserInDb($GLOBALS['mysqli'], $uid, $pernum, $password);
+                }
                 echo json_encode([
                     'success' => true,
                     'uid' => $matches[1],

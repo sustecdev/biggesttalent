@@ -73,7 +73,7 @@ $isSettings = strpos($currentUrl, 'settings') !== false;
             <span>Vote</span>
         </a>
 
-        <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+        <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'super_admin'], true)): ?>
             <!-- Admin Panel -->
             <a href="<?= defined('URLROOT') ? URLROOT . '/index.php?url=admin/nominations' : 'index.php?url=admin/nominations' ?>"
                 class="sidebar-item" style="text-decoration: none;">

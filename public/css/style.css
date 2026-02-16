@@ -1413,35 +1413,199 @@ a[href="logout.php"].nav-button:hover {
     }
 }
 
-/* Nomination Form Section */
+/* ============================================
+   NOMINATION FORM - Mobile First
+   ============================================ */
+
+/* Base = Mobile: compact, stacked, touch-friendly */
+.nomination-form-content {
+    padding: 16px;
+    padding-left: calc(16px + env(safe-area-inset-left));
+    padding-right: calc(16px + env(safe-area-inset-right));
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+}
+
 .nomination-form-section {
-    padding: 64px 0 96px;
+    padding: 24px 0 96px;
     background: var(--bg);
 }
 
-@media (min-width: 640px) {
-    .nomination-form-section {
-        padding: 80px 0 120px;
-    }
-}
-
 .nomination-form-wrapper {
-    max-width: 700px;
+    max-width: 100%;
     margin: 0 auto;
 }
 
 .nomination-form-card {
     background: linear-gradient(to bottom right, var(--card-bg), rgba(20, 20, 20, 0.5));
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 32px 24px;
+    border-radius: 12px;
+    padding: 20px 16px;
     box-shadow: var(--shadow-xl);
 }
 
+.nomination-form-card .form-header {
+    text-align: left;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.nomination-form-card .form-title {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: var(--text-main);
+}
+
+.nomination-form-card .form-description {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* Video upload options: stack on mobile */
+.video-upload-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.upload-option label {
+    min-height: 48px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* Form inputs: 48px min for touch */
+.nomination-form .form-input,
+.nomination-form .form-select {
+    min-height: 48px;
+    font-size: 16px; /* Prevents iOS zoom on focus */
+}
+
+.nomination-form .form-actions .btn-submit {
+    width: 100%;
+    min-height: 52px;
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+/* File inputs: larger tap area on mobile */
+.nomination-form input[type="file"] {
+    min-height: 48px;
+    padding: 12px 0;
+}
+
+/* Back button: touch-friendly on mobile */
+.nomination-back-btn {
+    min-height: 44px;
+    padding: 10px 18px !important;
+    font-size: 14px !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
 @media (min-width: 640px) {
+    .nomination-back-btn {
+        min-height: auto;
+        padding: 8px 16px !important;
+        font-size: 13px !important;
+    }
+}
+
+/* No-contestants cards (closed/already nominated): mobile padding */
+.nomination-form-section .no-contestants {
+    padding: 0 16px;
+}
+
+@media (min-width: 640px) {
+    .nomination-form-section .no-contestants {
+        padding: 0;
+    }
+}
+
+/* Form sections: tighter on mobile */
+.form-section {
+    margin-bottom: 24px;
+}
+
+@media (min-width: 640px) {
+    .form-section {
+        margin-bottom: 32px;
+    }
+}
+
+/* Section headings */
+.form-section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0 0 16px 0;
+}
+
+/* Tablet and up */
+@media (min-width: 640px) {
+    .nomination-form-content {
+        padding: 32px 24px;
+    }
+
+    .nomination-form-section {
+        padding: 48px 0 120px;
+    }
+
+    .nomination-form-wrapper {
+        max-width: 700px;
+        margin: 0 auto;
+    }
+
+    .nomination-form-card {
+        padding: 36px 28px;
+        border-radius: 16px;
+    }
+
+    .nomination-form-card .form-header {
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+        text-align: center;
+    }
+
+    .nomination-form-card .form-title {
+        font-size: 26px;
+    }
+
+    .nomination-form-card .form-description {
+        font-size: 15px;
+    }
+
+    .video-upload-options {
+        flex-direction: row;
+        gap: 16px;
+    }
+
+    .form-section-title {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .nomination-form .form-actions .btn-submit {
+        width: auto;
+        min-width: 220px;
+    }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+    .nomination-form-content {
+        padding: 40px;
+    }
+
     .nomination-form-card {
         padding: 48px 40px;
         border-radius: 24px;
+    }
+
+    .nomination-form-card .form-title {
+        font-size: 28px;
     }
 }
 
@@ -2230,9 +2394,8 @@ a[href="logout.php"].nav-button:hover {
     position: sticky;
     top: 80px;
     height: calc(100vh - 80px);
-    /* Fill the viewport height */
     overflow-y: auto;
-    /* Scroll internally if needed */
+    -webkit-overflow-scrolling: touch;
     padding-top: 0;
     align-self: flex-start;
     /* Prevent flex stretching */
@@ -2271,6 +2434,12 @@ a[href="logout.php"].nav-button:hover {
     transition: all 0.2s ease;
     cursor: pointer;
     border-left: 3px solid transparent;
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.sidebar-item:active {
+    background: rgba(205, 33, 125, 0.06);
 }
 
 .sidebar-item:hover {
@@ -2328,11 +2497,18 @@ a[href="logout.php"].nav-button:hover {
 }
 
 .dashboard-page-title {
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 800;
     color: #FFFFFF !important;
     margin: 0;
     letter-spacing: -0.5px;
+    line-height: 1.3;
+}
+
+@media (min-width: 640px) {
+    .dashboard-page-title {
+        font-size: 20px;
+    }
 }
 
 .dashboard-top-actions {
@@ -2566,6 +2742,7 @@ div.stat-value-ref {
 
     .profile-sidebar {
         width: 80px;
+        min-width: 80px;
     }
 
     .sidebar-category,
@@ -2576,7 +2753,14 @@ div.stat-value-ref {
 
     .sidebar-item {
         justify-content: center;
-        padding: 20px;
+        padding: 16px;
+        min-height: 48px;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    .sidebar-item svg {
+        margin-right: 0;
     }
 
     .dashboard-search-input {
@@ -2627,8 +2811,38 @@ div.stat-value-ref {
 
     .dashboard-top-bar {
         padding: 16px;
+        padding-left: calc(16px + env(safe-area-inset-left));
+        padding-right: calc(16px + env(safe-area-inset-right));
         flex-wrap: wrap;
-        gap: 16px;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .dashboard-top-bar .dashboard-page-title {
+        word-break: break-word;
+        flex: 1 1 120px;
+        min-width: 0;
+    }
+
+    .dashboard-top-bar .dashboard-top-actions {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .dashboard-top-bar .user-id-badge {
+        flex-shrink: 0;
+        font-size: 12px;
+    }
+
+    .dashboard-top-bar .user-id-number {
+        font-size: 13px !important;
+    }
+
+    .dashboard-top-bar .btn-safezone,
+    .dashboard-top-bar a {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
     }
 
     .welcome-section {
@@ -2640,6 +2854,22 @@ div.stat-value-ref {
     .btn-add-new {
         width: 100%;
         justify-content: center;
+        min-height: 48px;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .dashboard-content {
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .stat-card {
+        min-height: 140px;
     }
 }
 
@@ -2681,7 +2911,8 @@ div.stat-value-ref {
         bottom: 0;
         left: 0;
         right: 0;
-        height: 75px;
+        min-height: 64px;
+        height: calc(64px + env(safe-area-inset-bottom));
         background: rgba(15, 15, 20, 0.95);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
@@ -2689,8 +2920,11 @@ div.stat-value-ref {
         justify-content: space-around;
         align-items: center;
         z-index: 2000;
-        padding-bottom: env(safe-area-inset-bottom);
+        padding: 8px 8px calc(8px + env(safe-area-inset-bottom)) 8px;
+        padding-left: calc(8px + env(safe-area-inset-left));
+        padding-right: calc(8px + env(safe-area-inset-right));
         box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+        -webkit-tap-highlight-color: transparent;
     }
 
     .mobile-nav-item {
@@ -2705,16 +2939,21 @@ div.stat-value-ref {
         gap: 4px;
         background: none;
         border: none;
-        padding: 0;
+        padding: 12px 8px;
+        min-width: 48px;
+        min-height: 48px;
         cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
     }
 
     .mobile-nav-item svg {
-        width: 22px;
-        height: 22px;
+        width: 24px;
+        height: 24px;
         stroke-width: 2px;
         opacity: 0.7;
         transition: all 0.2s ease;
+        flex-shrink: 0;
     }
 
     .mobile-nav-item.active {
@@ -2730,6 +2969,21 @@ div.stat-value-ref {
     .mobile-nav-add {
         position: relative;
         top: -20px;
+        min-width: 56px;
+        min-height: 56px;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+        touch-action: manipulation;
+    }
+
+    /* Keep add icon white – active state would turn it primary and hide it on the gradient */
+    .mobile-nav-add .add-icon-circle,
+    .mobile-nav-add .add-icon-circle svg {
+        color: white !important;
+    }
+
+    .mobile-nav-add .add-icon-circle svg {
+        stroke: white !important;
     }
 
     .add-icon-circle {
@@ -2744,14 +2998,27 @@ div.stat-value-ref {
         border: 4px solid var(--bg);
         color: white;
         transition: transform 0.2s;
+        -webkit-tap-highlight-color: transparent;
     }
 
     .add-icon-circle:active {
-        transform: scale(0.95);
+        transform: scale(0.98);
     }
 
     .profile-main {
-        padding-bottom: 90px !important;
+        padding-bottom: calc(88px + env(safe-area-inset-bottom)) !important;
+    }
+
+    /* Very small screens: reduce nav item labels to prevent overflow */
+    @media (max-width: 360px) {
+        .mobile-nav-item span {
+            font-size: 9px;
+        }
+
+        .mobile-nav-item {
+            padding: 10px 4px;
+            min-width: 44px;
+        }
     }
 }
 

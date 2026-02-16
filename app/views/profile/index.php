@@ -36,11 +36,11 @@
 
                 <div class="dashboard-top-actions">
 
-                    <?php if (isset($_SESSION['role']) && $_SESSION['role'] === 'admin'): ?>
+                    <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'super_admin'], true)): ?>
                         <div class="user-id-badge"
                             style="background: linear-gradient(135deg, #dc2626, #991b1b); border: none;">
-                            <span class="user-id-number" style="color: white;">👑 ADMIN</span>
-                            <span class="user-id-label" style="color: rgba(255,255,255,0.9);">ADMINISTRATOR</span>
+                            <span class="user-id-number" style="color: white;">👑 <?= ($_SESSION['role'] ?? '') === 'super_admin' ? 'SUPER ADMIN' : 'ADMIN' ?></span>
+                            <span class="user-id-label" style="color: rgba(255,255,255,0.9);"><?= ($_SESSION['role'] ?? '') === 'super_admin' ? 'SUPER ADMINISTRATOR' : 'ADMINISTRATOR' ?></span>
                         </div>
                     <?php endif; ?>
 

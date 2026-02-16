@@ -21,8 +21,7 @@
 
                 <div class="dashboard-top-actions">
                     <a href="<?= defined('URLROOT') ? URLROOT . '/index.php?url=profile' : 'index.php?url=profile' ?>"
-                        class="btn-safezone btn-safezone-secondary"
-                        style="font-size: 13px; padding: 8px 16px; margin-right: 10px;">Back to Dashboard</a>
+                        class="btn-safezone btn-safezone-secondary nomination-back-btn">Back to Dashboard</a>
 
                     <div class="user-id-badge">
                         <span class="user-id-number">#<?= htmlspecialchars($userProfile['pernum'] ?? '') ?></span>
@@ -32,7 +31,7 @@
                 </div>
             </header>
 
-            <div class="dashboard-content" style="padding: 40px;">
+            <div class="dashboard-content nomination-form-content">
                 <!-- Nomination Form Section -->
                 <section class="nomination-form-section" style="padding: 0;">
                     <div class="container" style="max-width: 100%; padding: 0;">
@@ -61,22 +60,15 @@
                         <?php else: ?>
                         <div class="nomination-form-wrapper" style="box-shadow: none; padding: 0;">
                             <div class="nomination-form-card">
-                                <div class="form-header"
-                                    style="margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border);">
-                                    <h2 class="form-title"
-                                        style="font-size: 24px; font-weight: 800; color: var(--text-main); margin: 0 0 8px 0;">
-                                        Nomination Details</h2>
-                                    <p class="form-description"
-                                        style="font-size: 14px; color: var(--text-muted); margin: 0;">Showcase amazing
-                                        talent to the world</p>
+                                <div class="form-header">
+                                    <h2 class="form-title">Nomination Details</h2>
+                                    <p class="form-description">Showcase amazing talent to the world</p>
                                 </div>
 
                                 <form id="nominationForm" class="nomination-form" enctype="multipart/form-data">
                                     <!-- Performance Info Section -->
-                                    <div style="margin-bottom: 32px;">
-                                        <h3
-                                            style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">
-                                            Performance Information</h3>
+                                    <div class="form-section">
+                                        <h3 class="form-section-title">Performance Information</h3>
 
                                         <!-- Active Season Display -->
                                         <?php
@@ -202,10 +194,8 @@
                                     </div>
 
                                     <!-- Location Section -->
-                                    <div style="margin-bottom: 32px;">
-                                        <h3
-                                            style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">
-                                            Location</h3>
+                                    <div class="form-section">
+                                        <h3 class="form-section-title">Location</h3>
 
                                         <div class="form-group">
                                             <label for="country" class="form-label">
@@ -315,11 +305,8 @@
                                     </div>
 
                                     <!-- Video Section -->
-
-                                    <div>
-                                        <h3
-                                            style="font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 20px;">
-                                            Video Submission</h3>
+                                    <div class="form-section">
+                                        <h3 class="form-section-title">Video Submission</h3>
 
                                         <div class="form-group">
                                             <label class="form-label">
@@ -349,9 +336,9 @@
 
                                             <div id="video-link-section" class="video-input-section">
                                                 <input type="url" class="form-input" id="vlink" name="vlink"
-                                                    placeholder="https://youtube.com/watch?v=..." <p class="form-hint"
-                                                    style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">
-                                                Share a link to a video showcasing the talent (YouTube, Vimeo, etc.)
+                                                    placeholder="https://youtube.com/watch?v=...">
+                                                <p class="form-hint">
+                                                    Share a link to a video showcasing the talent (YouTube, Vimeo, etc.)
                                                 </p>
                                             </div>
 
@@ -409,13 +396,22 @@
 <!-- Select2 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <style>
-    /* Custom Select2 styling to match form theme */
-    .select2-container--default .select2-selection--single {
+    /* Custom Select2 styling - mobile-first (48px min touch target) */
+    .nomination-form .select2-container--default .select2-selection--single {
         background: rgba(255, 255, 255, 0.05);
         border: 1px solid var(--border);
         border-radius: 8px;
-        height: 44px;
-        padding: 8px 16px;
+        min-height: 48px;
+        height: 48px;
+        padding: 10px 16px;
+    }
+
+    @media (min-width: 640px) {
+        .nomination-form .select2-container--default .select2-selection--single {
+            min-height: 44px;
+            height: 44px;
+            padding: 8px 16px;
+        }
     }
 
     .select2-container--default .select2-selection--single .select2-selection__rendered {
@@ -424,8 +420,14 @@
         padding: 0;
     }
 
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 42px;
+    .nomination-form .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 46px;
+    }
+
+    @media (min-width: 640px) {
+        .nomination-form .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 42px;
+        }
     }
 
     .select2-dropdown {

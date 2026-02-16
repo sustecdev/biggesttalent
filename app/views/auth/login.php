@@ -158,9 +158,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const pinHint = document.getElementById('pin-hint');
         const backBtn = document.getElementById('back-to-login');
 
-        // API Endpoints
-        const LOGIN_API = '<?= URLROOT ?>/safezone_login.php';
-        const PIN_API = '<?= URLROOT ?>/safezone_pin.php';
+        // API Endpoints (MVC)
+        const LOGIN_API = '<?= URLROOT ?>/safezone/login';
+        const PIN_API = '<?= URLROOT ?>/safezone/verifyPin';
 
         let currentUid = '';
         let currentPernum = '';

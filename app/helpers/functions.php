@@ -311,6 +311,36 @@ function getUserRoleByUid(int $uid, ?string $pernum = null): string
     return ($role === '' || $role === null) ? 'user' : $role;
 }
 
+/**
+ * Ensure user exists in pi_account and pi_profile. Called when SafeZone validates credentials.
+ * Creates user on first login so PIN step and app features work correctly.
+ *
+ * @param mysqli $mysqli Database connection
+ * @param int $uid User ID from SafeZone
+ * @param string $pernum Pernum (username)
+ * @param string $password Plain password (SafeZone validates; we store for legacy login)
+ */
+function ensureUserInDb($mysqli, int $uid, string $pernum, string $password): void
+{
+    if (!$mysqli) {
+        error_log('ensureUserInDb: no mysqli connection');
+        return;
+    }
+    $uid = (int) $uid;
+    $pernumSafe = $mysqli->real_escape_string($pernum);
+    $passwordSafe = $mysqli->real_escape_string($password);
+
+    $sql = "INSERT INTO pi_account (uid, username, password, email, role) VALUES ($uid, '$pernumSafe', '$passwordSafe', '', 'user') ON DUPLICATE KEY UPDATE password='$passwordSafe'";
+    if (!$mysqli->query($sql)) {
+        error_log('ensureUserInDb INSERT failed: ' . $mysqli->error . ' | uid=' . $uid . ' | pernum=' . $pernum);
+        return;
+    }
+    $checkProfile = $mysqli->query("SELECT uid FROM pi_profile WHERE uid = $uid");
+    if (!$checkProfile || $checkProfile->num_rows == 0) {
+        $mysqli->query("INSERT INTO pi_profile (uid, fname, lname) VALUES ($uid, 'SafeZone', 'User')");
+    }
+}
+
 // -----------------------------------------------------------------------------
 // Feature Functions (from feature-functions.php)
 // -----------------------------------------------------------------------------

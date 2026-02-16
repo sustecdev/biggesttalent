@@ -25,14 +25,23 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Ensure user is authenticated and has admin role
+     * Ensure user is authenticated and has admin or super_admin role
      */
     protected function ensureAdmin()
     {
-        if (!isset($_SESSION['uid']) || $_SESSION['role'] !== 'admin') {
+        $role = $_SESSION['role'] ?? '';
+        if (!isset($_SESSION['uid']) || !in_array($role, ['admin', 'super_admin'], true)) {
             header("Location: " . URLROOT);
             exit();
         }
+    }
+
+    /**
+     * Check if current user is super admin
+     */
+    protected function isSuperAdmin(): bool
+    {
+        return ($_SESSION['role'] ?? '') === 'super_admin';
     }
 
     /**
