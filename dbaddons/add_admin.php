@@ -1,9 +1,14 @@
 <?php
 /**
- * Add User as Admin
- * Usage: http://localhost/btanew/dbaddons/add_admin.php?uid=1001290033
- *        php add_admin.php 1001290033
- *        php add_admin.php 1001290033 --create  (create account if missing)
+ * Add User as Admin (with or without them signing in first)
+ *
+ * By username (pernum) - pre-add before first login:
+ *   http://localhost/btanew/dbaddons/add_admin.php?pernum=THEIR_SAFEZONE_USERNAME
+ *   php add_admin.php THEIR_SAFEZONE_USERNAME
+ *
+ * By uid - for users who have already logged in:
+ *   http://localhost/btanew/dbaddons/add_admin.php?uid=1001290033
+ *   php add_admin.php 1001290033
  */
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -15,23 +20,34 @@ use App\Core\Config;
 use App\Core\Database;
 
 Config::load();
+require_once __DIR__ . '/../app/helpers/functions.php';
 
 $db = Database::getInstance();
 $conn = $db->getConnection();
+$GLOBALS['mysqli'] = $conn;
 
 if (!$conn || $conn->connect_error) {
     die('Database connection failed: ' . ($conn->error ?? 'Unknown'));
 }
 
-// Get uid/pernum from query string or CLI arg
-$id = isset($_GET['uid']) ? $_GET['uid'] : (isset($_GET['pernum']) ? $_GET['pernum'] : ($argv[1] ?? null));
-$createIfMissing = isset($_GET['create']) || (isset($argv[2]) && $argv[2] === '--create');
+$id = isset($_GET['pernum']) ? $_GET['pernum'] : (isset($_GET['uid']) ? $_GET['uid'] : ($argv[1] ?? null));
 if (!$id) {
-    die("Usage: add_admin.php?uid=1001290033  or  php add_admin.php 1001290033 [--create]\n");
+    die("Usage: add_admin.php?pernum=SAFEZONE_USERNAME  (add before they sign in)\n" .
+        "      add_admin.php?uid=1001290033  (user who already logged in)\n");
 }
 
-$uid = is_numeric($id) ? (int) $id : 0;
-$idStr = (string) $id;
+// If pernum/username (non-numeric), use addAdminByUsername - works before they sign in
+if (!is_numeric($id) && function_exists('addAdminByUsername')) {
+    if (addAdminByUsername(trim($id))) {
+        echo "Success: Pre-added '$id' as admin. They will have admin access on their first SafeZone login.\n";
+    } else {
+        die("Failed to add admin for '$id'.\n");
+    }
+    exit(0);
+}
+
+// By uid - for existing users
+$uid = (int) $id;
 
 // Ensure role column exists
 $check = $conn->query("SHOW COLUMNS FROM pi_account LIKE 'role'");
@@ -39,44 +55,26 @@ if (!$check || $check->num_rows == 0) {
     $conn->query("ALTER TABLE pi_account ADD COLUMN role VARCHAR(20) DEFAULT 'user'");
 }
 
-// Try by uid first, then by username (pernum)
 $stmt = $conn->prepare("SELECT uid, username, role FROM pi_account WHERE uid = ? OR username = ?");
-$stmt->bind_param("is", $uid, $idStr);
+$stmt->bind_param("is", $uid, $id);
 $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    if ($createIfMissing && $uid > 0) {
-        // Create account with placeholder password; user must log in via SafeZone to set real password
-        $pwPlaceholder = bin2hex(random_bytes(16));
-        $usernameEsc = $conn->real_escape_string($idStr);
-        $pwEsc = $conn->real_escape_string($pwPlaceholder);
-        $insert = "INSERT INTO pi_account (uid, username, password, email, role) VALUES ($uid, '$usernameEsc', '$pwEsc', '', 'admin')";
-        if ($conn->query($insert)) {
-            $checkProfile = $conn->query("SELECT uid FROM pi_profile WHERE uid = $uid");
-            if (!$checkProfile || $checkProfile->num_rows == 0) {
-                $conn->query("INSERT INTO pi_profile (uid, fname, lname) VALUES ($uid, 'Admin', 'User')");
-            }
-            echo "Success: Created user $uid ($idStr) as admin. They must log in via SafeZone to authenticate.\n";
-            exit(0);
-        }
-        die("Failed to create user: " . $conn->error . "\n");
-    }
-    die("User '$id' not found. Log in via SafeZone first, or run with --create to create the account.\n");
+    die("User '$id' not found. Use pernum=USERNAME to pre-add before their first login.\n");
 }
 
 $user = $result->fetch_assoc();
 
-if (($user['role'] ?? '') === 'admin') {
-    die("User $uid (" . ($user['username'] ?? '') . ") is already an admin.\n");
+if (in_array($user['role'] ?? '', ['admin', 'super_admin'], true)) {
+    die("User " . ($user['username'] ?? $uid) . " is already an admin.\n");
 }
 
-// Update to admin
 $update = $conn->prepare("UPDATE pi_account SET role = 'admin' WHERE uid = ?");
-$update->bind_param("i", $uid);
+$update->bind_param("i", $user['uid']);
 
 if ($update->execute() && $conn->affected_rows > 0) {
-    echo "Success: User $uid (" . ($user['username'] ?? '') . ") has been set as admin.\n";
+    echo "Success: User " . ($user['username'] ?? $uid) . " has been set as admin.\n";
 } else {
     die("Failed to update role. " . ($conn->error ?? '') . "\n");
 }

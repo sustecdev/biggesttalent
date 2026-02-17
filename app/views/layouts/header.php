@@ -149,7 +149,7 @@
                         class="text-white/90 hover:text-white hover:bg-[rgba(205,33,125,0.1)] px-2.5 py-2 rounded-md text-sm font-medium transition-all duration-300 relative nav-link-underline">Rules</a>
 
                     <?php if (function_exists('isAuthenticated') && isAuthenticated()): ?>
-                        <?php if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'super_admin'], true)): ?>
+                        <?php if (!function_exists('isAdmin') || !isAdmin()): ?>
                             <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php?url=profile"
                                 class="bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(205,33,125,0.5)] shadow-[0_2px_8px_rgba(205,33,125,0.3)]">Dashboard</a>
                         <?php endif; ?>
@@ -158,7 +158,7 @@
                             class="bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white px-5 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(205,33,125,0.5)] shadow-[0_2px_8px_rgba(205,33,125,0.3)]">Sign
                             In</a>
                     <?php endif; ?>
-                    <?php if (isset($_SESSION['uid']) && isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'super_admin'], true)): ?>
+                    <?php if (function_exists('isAdmin') && isAdmin()): ?>
                         <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/dashboard"
                             class="bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(205,33,125,0.5)] shadow-[0_2px_8px_rgba(205,33,125,0.3)]">Dashboard</a>
                     <?php endif; ?>
@@ -198,16 +198,16 @@
                 class="w-full px-4 py-3 rounded-lg text-base text-left text-white/90 hover:text-white hover:bg-[rgba(205,33,125,0.1)] transition-all duration-300">Rules</a>
 
             <?php if (function_exists('isAuthenticated') && isAuthenticated()): ?>
-                <?php if (!isset($_SESSION['role']) || !in_array($_SESSION['role'], ['admin', 'super_admin'], true)): ?>
-                    <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php?url=profile"
-                        class="w-full mt-2 px-4 py-3 rounded-lg text-base text-center bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(205,33,125,0.5)] shadow-[0_2px_8px_rgba(205,33,125,0.3)]">Dashboard</a>
-                <?php endif; ?>
-            <?php else: ?>
-                <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/safezone"
-                    class="w-full mt-2 px-4 py-4 rounded-lg text-base text-center bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(205,33,125,0.5)] shadow-[0_2px_8px_rgba(205,33,125,0.3)]">Sign
-                    In</a>
+            <?php if (!function_exists('isAdmin') || !isAdmin()): ?>
+                <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php?url=profile"
+                    class="w-full mt-2 px-4 py-3 rounded-lg text-base text-center bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(205,33,125,0.5)] shadow-[0_2px_8px_rgba(205,33,125,0.3)]">Dashboard</a>
             <?php endif; ?>
-            <?php if (isset($_SESSION['uid']) && isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'super_admin'], true)): ?>
+        <?php else: ?>
+            <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/safezone"
+                class="w-full mt-2 px-4 py-4 rounded-lg text-base text-center bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(205,33,125,0.5)] shadow-[0_2px_8px_rgba(205,33,125,0.3)]">Sign
+                In</a>
+        <?php endif; ?>
+        <?php if (function_exists('isAdmin') && isAdmin()): ?>
                 <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/dashboard"
                     class="w-full mt-2 px-4 py-4 rounded-lg text-base text-center bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_4px_12px_rgba(205,33,125,0.5)] shadow-[0_2px_8px_rgba(205,33,125,0.3)]">Dashboard</a>
             <?php endif; ?>

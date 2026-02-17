@@ -137,4 +137,40 @@ class UsersController extends BaseController
             echo json_encode(['success' => false, 'message' => 'Database error']);
         }
     }
+
+    /**
+     * Pre-add admin by SafeZone username (pernum). Works before the user signs in.
+     * Super Admin only.
+     */
+    public function addByUsername()
+    {
+        header('Content-Type: application/json');
+
+        if (!$this->isSuperAdmin()) {
+            echo json_encode(['success' => false, 'message' => 'Only Super Admin can add admins by username']);
+            return;
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+            return;
+        }
+
+        $username = trim($_POST['username'] ?? '');
+        if ($username === '') {
+            echo json_encode(['success' => false, 'message' => 'Enter a SafeZone username (pernum)']);
+            return;
+        }
+
+        if (!function_exists('addAdminByUsername')) {
+            echo json_encode(['success' => false, 'message' => 'addAdminByUsername not available']);
+            return;
+        }
+
+        if (addAdminByUsername($username)) {
+            echo json_encode(['success' => true, 'message' => "'$username' added as admin. They will have access on their first login."]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to add admin']);
+        }
+    }
 }

@@ -2,8 +2,13 @@
     <h2>Users & Roles</h2>
     <?php if (!empty($data['is_super_admin'])): ?>
         <p class="text-muted" style="margin-top: 4px; font-size: 13px;">You are Super Admin. Only you can add or remove admins.</p>
+        <div class="page-actions" style="margin-top: 12px; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" class="form-control" id="addAdminUsername" placeholder="SafeZone username (pernum)"
+                style="width: 220px;" title="Add admin before they sign in">
+            <button type="button" class="btn-admin btn-primary" id="btnAddAdminByUsername">+ Add Admin (no login required)</button>
+        </div>
     <?php endif; ?>
-    <div class="page-actions">
+    <div class="page-actions" style="margin-top: 12px;">
         <input type="text" class="form-control" id="searchUsers" placeholder="Search users..."
             style="display: inline-block; width: 300px;">
     </div>
@@ -178,6 +183,38 @@
             },
             error: function (xhr, status, error) {
                 alert('Request failed: ' + error);
+            }
+        });
+    });
+
+    // Add Admin by Username (no login required)
+    $('#btnAddAdminByUsername').on('click', function () {
+        const username = $('#addAdminUsername').val().trim();
+        if (!username) {
+            alert('Enter a SafeZone username (pernum)');
+            return;
+        }
+
+        $.ajax({
+            url: '<?= URLROOT ?>/admin/users/addByUsername',
+            type: 'POST',
+            data: { username: username },
+            success: function (response) {
+                try {
+                    const res = typeof response === 'string' ? JSON.parse(response) : response;
+                    if (res.success) {
+                        alert(res.message || 'Admin added successfully.');
+                        $('#addAdminUsername').val('');
+                        location.reload();
+                    } else {
+                        alert('Error: ' + (res.message || 'Failed'));
+                    }
+                } catch (e) {
+                    alert('An error occurred.');
+                }
+            },
+            error: function () {
+                alert('Request failed.');
             }
         });
     });

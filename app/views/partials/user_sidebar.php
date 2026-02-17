@@ -73,7 +73,7 @@ $isSettings = strpos($currentUrl, 'settings') !== false;
             <span>Vote</span>
         </a>
 
-        <?php if (isset($_SESSION['role']) && in_array($_SESSION['role'], ['admin', 'super_admin'], true)): ?>
+        <?php if (function_exists('isAdmin') && isAdmin()): ?>
             <!-- Admin Panel -->
             <a href="<?= defined('URLROOT') ? URLROOT . '/index.php?url=admin/nominations' : 'index.php?url=admin/nominations' ?>"
                 class="sidebar-item" style="text-decoration: none;">
@@ -192,6 +192,18 @@ $isSettings = strpos($currentUrl, 'settings') !== false;
         </svg>
         <span>Vote</span>
     </a>
+
+    <?php if (function_exists('isAdmin') && isAdmin()): ?>
+    <a href="<?= defined('URLROOT') ? URLROOT . '/admin/nominations' : 'index.php?url=admin/nominations' ?>"
+        class="mobile-nav-item">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+            <polyline points="2 17 12 22 22 17"></polyline>
+        </svg>
+        <span>Admin</span>
+    </a>
+    <?php endif; ?>
 
     <?php if ($isDashboard && !$isNominate): ?>
         <button class="mobile-nav-item" onclick="switchTab('edit', this)">

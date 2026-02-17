@@ -23,8 +23,8 @@ $db = Database::getInstance();
 $GLOBALS['mysqli'] = $db->getConnection(); // For legacy compatibility with helpers
 
 // Sync session role from DB when logged in (ensures admin upgrades show immediately)
-if (isset($_SESSION['uid']) && $_SESSION['uid'] && function_exists('getUserRoleByUid')) {
-    $_SESSION['role'] = getUserRoleByUid((int) $_SESSION['uid'], $_SESSION['pernum'] ?? null);
+if (function_exists('syncSessionRole')) {
+    syncSessionRole();
 }
 
 // Init Router

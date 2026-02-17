@@ -51,40 +51,9 @@ class DashboardController extends Controller
         $this->view('admin/layouts/footer');
     }
 
-    private function ensureAdmin()
+    private function ensureAdmin(): void
     {
-        $uid = (int) ($_SESSION['uid'] ?? 0);
-        $isAdmin = false;
-
-        // Check session first
-        $sessionRole = $_SESSION['role'] ?? '';
-        if (in_array($sessionRole, ['admin', 'super_admin'], true)) {
-            $isAdmin = true;
-        } else {
-            // Check DB
-            if (isset($GLOBALS['mysqli'])) {
-                $roleQuery = "SELECT role FROM pi_account WHERE uid = $uid";
-                $roleResult = $GLOBALS['mysqli']->query($roleQuery);
-                if ($roleResult && $roleResult->num_rows > 0) {
-                    $row = $roleResult->fetch_assoc();
-                    $dbRole = $row['role'] ?? '';
-                    if (in_array($dbRole, ['admin', 'super_admin'], true)) {
-                        $_SESSION['role'] = $dbRole;
-                        $isAdmin = true;
-                    }
-                }
-            }
-        }
-
-        if (!$isAdmin) {
-            // Redirect to make-admin page if not admin
-            // Use absolute path or relative to URLROOT depending on where make-admin.php is
-            // It is in project root, so likely ../make-admin.php relative to public/index.php
-            // But via URL it should be URLROOT/../make-admin.php or just make-admin.php if routed?
-            // Since make-admin.php is in root and NOT routed by MVC, we need absolute path.
-            // However, Config::URLROOT points to public.
-            // Let's assume URLROOT/../make-admin.php works if served from root, but URLROOT includes /public
-            // So we need to go up one level.
+        if (!function_exists('isAdmin') || !isAdmin()) {
             $makeAdminUrl = str_replace('/public', '', URLROOT) . '/make-admin.php';
             header('Location: ' . $makeAdminUrl);
             exit;
