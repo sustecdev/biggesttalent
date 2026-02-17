@@ -1,4 +1,5 @@
 <footer class="modern-footer">
+        <div class="footer-bg" style="background-image: url('<?= defined('URLROOT') ? URLROOT : '' ?>/images/base%20design.png');"></div>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-brand">
@@ -60,11 +61,26 @@
 <style>
     /* Footer Styles */
     .modern-footer {
+        position: relative;
         background: #050505;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
         padding: 4rem 0 2rem;
         margin-top: auto;
         font-family: 'Outfit', sans-serif;
+        overflow: hidden;
+    }
+
+    .modern-footer .footer-bg {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    .modern-footer .container {
+        position: relative;
+        z-index: 1;
     }
 
     .footer-content {

@@ -1,15 +1,18 @@
 <!-- Hero Section -->
 <section
-    class="hero-section min-h-screen flex items-center justify-center relative pt-20 pb-20 md:pt-28 md:pb-24 px-4 sm:px-6 lg:px-8 bg-[#0a0a0a] overflow-hidden">
-    <!-- Animated Blob Backgrounds -->
+    class="hero-section min-h-screen flex items-center justify-center relative pt-20 pb-20 md:pt-28 md:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <!-- Hero Background Image -->
+    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style="background-image: url('<?= defined('URLROOT') ? URLROOT : '' ?>/images/Front_design.png');">
+    </div>
+    <!-- Light overlay for content readability -->
+    <div class="absolute inset-0 bg-black/10 pointer-events-none"></div>
+    <!-- Animated Blob Backgrounds (subtle) -->
     <div
-        class="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] min-h-[400px] bg-[#cd217d] rounded-full mix-blend-multiply filter blur-[100px] opacity-25 animate-blob pointer-events-none">
+        class="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] min-h-[400px] bg-[#cd217d] rounded-full mix-blend-multiply filter blur-[100px] opacity-15 animate-blob pointer-events-none">
     </div>
     <div
-        class="absolute top-[-5%] right-[-10%] w-[45%] h-[45%] min-h-[350px] bg-[#9a288d] rounded-full mix-blend-multiply filter blur-[100px] opacity-20 animate-blob animation-delay-2000 pointer-events-none">
-    </div>
-    <div
-        class="absolute bottom-[-5%] left-[10%] w-[35%] h-[35%] min-h-[280px] bg-[#aa843f] rounded-full mix-blend-multiply filter blur-[90px] opacity-15 animate-blob animation-delay-4000 pointer-events-none">
+        class="absolute top-[-5%] right-[-10%] w-[45%] h-[45%] min-h-[350px] bg-[#9a288d] rounded-full mix-blend-multiply filter blur-[100px] opacity-12 animate-blob animation-delay-2000 pointer-events-none">
     </div>
 
     <!-- Content Container -->
