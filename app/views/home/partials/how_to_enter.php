@@ -25,50 +25,60 @@ $nomOpen = $activeSeason ? ($activeSeason['is_nominations_open'] ?? 1) : 1;
 
         <!-- 3 Ways: Featured Layout -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-4 mb-20 md:mb-24">
+            <?php $urlRoot = defined('URLROOT') ? URLROOT : ''; ?>
             <!-- 1. Get Scouted -->
             <div class="relative">
-                <div class="group h-full p-5 md:p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#cd217d]/30 hover:bg-white/[0.06] transition-all duration-500">
-                    <div class="w-12 h-12 rounded-xl bg-[#cd217d]/20 flex items-center justify-center mb-4 group-hover:bg-[#cd217d]/40 transition-colors duration-500">
-                        <span class="text-[#cd217d] font-black text-xl">1</span>
+                <div class="group h-full min-h-[280px] md:min-h-[320px] p-5 md:p-6 rounded-2xl border border-white/10 hover:border-[#cd217d]/50 transition-all duration-500 overflow-hidden flex flex-col" style="background-image: url('<?= $urlRoot ?>/images/Stage%201%20(1).png'); background-size: cover; background-position: center top; background-repeat: no-repeat;">
+                    <div class="absolute inset-0 bg-black/60 rounded-2xl z-0" aria-hidden="true"></div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-[#cd217d]/20 flex items-center justify-center mb-4 group-hover:bg-[#cd217d]/40 transition-colors duration-500">
+                            <span class="text-[#cd217d] font-black text-xl">1</span>
+                        </div>
+                        <h3 class="text-lg font-black text-white mb-3 uppercase tracking-wide">Get Scouted</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Our official talent scouts are searching across Africa for the next superstar.
+                        </p>
                     </div>
-                    <h3 class="text-lg font-black text-white mb-3 uppercase tracking-wide">Get Scouted</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Our official talent scouts are searching across Africa for the next superstar.
-                    </p>
                 </div>
             </div>
 
             <!-- 2. Get Nominated by Fans -->
             <div class="relative">
-                <div class="group h-full p-5 md:p-6 rounded-2xl bg-white/[0.03] border border-white/10 hover:border-[#cd217d]/30 hover:bg-white/[0.06] transition-all duration-500">
-                    <div class="w-12 h-12 rounded-xl bg-[#cd217d]/20 flex items-center justify-center mb-4 group-hover:bg-[#cd217d]/40 transition-colors duration-500">
-                        <span class="text-[#cd217d] font-black text-xl">2</span>
+                <div class="group h-full min-h-[280px] md:min-h-[320px] p-5 md:p-6 rounded-2xl border border-white/10 hover:border-[#cd217d]/50 transition-all duration-500 overflow-hidden flex flex-col" style="background-image: url('<?= $urlRoot ?>/images/satges%202.png'); background-size: cover; background-position: center top; background-repeat: no-repeat;">
+                    <div class="absolute inset-0 bg-black/60 rounded-2xl z-0" aria-hidden="true"></div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-[#cd217d]/20 flex items-center justify-center mb-4 group-hover:bg-[#cd217d]/40 transition-colors duration-500">
+                            <span class="text-[#cd217d] font-black text-xl">2</span>
+                        </div>
+                        <h3 class="text-lg font-black text-white mb-3 uppercase tracking-wide">Get Nominated by Fans</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            Your supporters can nominate you to represent your country.
+                        </p>
                     </div>
-                    <h3 class="text-lg font-black text-white mb-3 uppercase tracking-wide">Get Nominated by Fans</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">
-                        Your supporters can nominate you to represent your country.
-                    </p>
                 </div>
             </div>
 
             <!-- 3. Nominate Yourself (Featured - has CTA) -->
             <div class="relative">
-                <div class="group h-full relative p-5 md:p-6 rounded-2xl bg-gradient-to-b from-[#cd217d]/15 to-transparent border-2 border-[#cd217d]/40 hover:border-[#cd217d] transition-all duration-500 lg:-translate-y-1 lg:shadow-xl lg:shadow-[#cd217d]/10">
-                    <div class="w-12 h-12 rounded-xl bg-[#cd217d]/30 flex items-center justify-center mb-4 group-hover:bg-[#cd217d] group-hover:scale-110 transition-all duration-500">
-                        <span class="text-[#cd217d] group-hover:text-white font-black text-xl">3</span>
+                <div class="group h-full min-h-[280px] md:min-h-[320px] relative p-5 md:p-6 rounded-2xl border-2 border-[#cd217d]/40 hover:border-[#cd217d] transition-all duration-500 overflow-hidden flex flex-col lg:-translate-y-1 lg:shadow-xl lg:shadow-[#cd217d]/10" style="background-image: url('<?= $urlRoot ?>/images/satges%203.png'); background-size: cover; background-position: center top; background-repeat: no-repeat;">
+                    <div class="absolute inset-0 bg-black/60 rounded-2xl z-0" aria-hidden="true"></div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-xl bg-[#cd217d]/30 flex items-center justify-center mb-4 group-hover:bg-[#cd217d] group-hover:scale-110 transition-all duration-500">
+                            <span class="text-[#cd217d] group-hover:text-white font-black text-xl">3</span>
+                        </div>
+                        <h3 class="text-lg font-black text-white mb-3 uppercase tracking-wide">Nominate Yourself</h3>
+                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
+                            Don't wait. Sign up, upload your performance and enter directly.
+                        </p>
+                        <?php if ($nomOpen): ?>
+                            <a href="<?= $urlRoot ? $urlRoot . '/index.php?url=nominate' : 'index.php?url=nominate' ?>" class="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg bg-[#cd217d] hover:bg-[#a51a64] text-white font-bold text-sm transition-all hover:scale-[1.02] nominate-trigger">
+                                Enter Now
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                            </a>
+                        <?php else: ?>
+                            <span class="inline-flex items-center justify-center w-full py-3 px-4 rounded-lg bg-white/5 text-gray-500 font-medium text-sm">Coming Soon</span>
+                        <?php endif; ?>
                     </div>
-                    <h3 class="text-lg font-black text-white mb-3 uppercase tracking-wide">Nominate Yourself</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-5">
-                        Don't wait. Sign up, upload your performance and enter directly.
-                    </p>
-                    <?php if ($nomOpen): ?>
-                        <a href="index.php?url=nominate" class="inline-flex items-center justify-center gap-2 w-full py-3 px-4 rounded-lg bg-[#cd217d] hover:bg-[#a51a64] text-white font-bold text-sm transition-all hover:scale-[1.02] nominate-trigger">
-                            Enter Now
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        </a>
-                    <?php else: ?>
-                        <span class="inline-flex items-center justify-center w-full py-3 px-4 rounded-lg bg-white/5 text-gray-500 font-medium text-sm">Coming Soon</span>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>

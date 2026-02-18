@@ -5,8 +5,8 @@
     <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style="background-image: url('<?= defined('URLROOT') ? URLROOT : '' ?>/images/Front_design.png');">
     </div>
-    <!-- Light overlay for content readability -->
-    <div class="absolute inset-0 bg-black/10 pointer-events-none"></div>
+    <!-- Dark overlay for content readability -->
+    <div class="absolute inset-0 bg-black/70 pointer-events-none"></div>
     <!-- Animated Blob Backgrounds (subtle) -->
     <div
         class="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] min-h-[400px] bg-[#cd217d] rounded-full mix-blend-multiply filter blur-[100px] opacity-15 animate-blob pointer-events-none">

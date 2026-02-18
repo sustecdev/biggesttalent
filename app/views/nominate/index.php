@@ -16,53 +16,52 @@
         <!-- Main Content -->
         <div class="profile-main">
             <!-- Top Header -->
-            <header class="dashboard-top-bar">
-                <h1 class="dashboard-page-title"><?= $data['page_title'] ?? 'Make a Nomination' ?></h1>
+            <header class="dashboard-top-bar flex flex-wrap justify-between items-center gap-3">
+                <h1 class="dashboard-page-title text-lg sm:text-xl font-extrabold text-white"><?= $data['page_title'] ?? 'Make a Nomination' ?></h1>
 
-                <div class="dashboard-top-actions">
-                    <a href="<?= defined('URLROOT') ? URLROOT . '/index.php?url=profile' : 'index.php?url=profile' ?>"
-                        class="btn-safezone btn-safezone-secondary nomination-back-btn">Back to Dashboard</a>
+                <div class="dashboard-top-actions flex flex-wrap items-center gap-3">
+                    <a href="<?= defined('URLROOT') ? URLROOT . '/index.php?url=profile' : 'index.php?url=profile' ?>" class="px-4 py-2 rounded-lg border border-white/20 text-white font-medium hover:bg-white/5 transition min-h-[44px] flex items-center">Back to Dashboard</a>
 
                     <div class="user-id-badge">
-                        <span class="user-id-number">#<?= htmlspecialchars($userProfile['pernum'] ?? '') ?></span>
-                        <span class="user-id-label">VERIFIED USER</span>
+                        <span class="user-id-number block text-sm font-extrabold text-white">#<?= htmlspecialchars($userProfile['pernum'] ?? $_SESSION['pernum'] ?? '') ?></span>
+                        <span class="user-id-label text-[10px] text-gray-500 uppercase font-semibold">VERIFIED USER</span>
                     </div>
-                    <!-- Avatar Removed -->
                 </div>
             </header>
 
-            <div class="dashboard-content nomination-form-content">
-                <!-- Nomination Form Section -->
-                <section class="nomination-form-section" style="padding: 0;">
-                    <div class="container" style="max-width: 100%; padding: 0;">
+            <div class="dashboard-content nomination-form-content p-4 md:p-8 lg:p-10">
+                <section class="nomination-form-section p-0">
+                    <div class="w-full max-w-full p-0">
                         <?php if (!empty($data['nominations_closed'])): ?>
-                            <div class="no-contestants" style="max-width: 600px; margin: 0 auto;">
-                                <div class="no-contestants-card">
-                                    <h2>Nominations Are Currently Closed</h2>
+                            <div class="flex justify-center min-h-[400px] py-6">
+                                <div class="no-contestants-card bg-[#16161d] border border-white/10 rounded-2xl p-8 md:p-12 max-w-xl mx-auto text-center">
+                                    <h2 class="text-2xl font-bold text-white mb-4">Nominations Are Currently Closed</h2>
                                     <?php if (!empty($data['voting_open'])): ?>
-                                        <p>Nominations for this season have closed. Voting has started! Cast your vote for your favorite talent and help them advance.</p>
-                                        <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php?url=vote" class="btn-submit">Go to Voting</a>
+                                        <p class="text-gray-400 mb-6">Nominations for this season have closed. Voting has started! Cast your vote for your favorite talent and help them advance.</p>
+                                        <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php?url=vote" class="inline-block px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white hover:opacity-90 transition">Go to Voting</a>
                                     <?php else: ?>
-                                        <p>Nominations for this season are not open yet. Please stay tuned to our social media channels for updates on when you can submit your talent!</p>
-                                        <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php" class="btn-submit">Back to Home</a>
+                                        <p class="text-gray-400 mb-6">Nominations for this season are not open yet. Please stay tuned to our social media channels for updates on when you can submit your talent!</p>
+                                        <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php" class="inline-block px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white hover:opacity-90 transition">Back to Home</a>
                                     <?php endif; ?>
                                 </div>
                             </div>
                         <?php elseif (!empty($data['already_nominated'])): ?>
-                            <div class="no-contestants" style="max-width: 600px; margin: 0 auto;">
-                                <div class="no-contestants-card">
-                                    <h2>You've Already Nominated</h2>
-                                    <p>You can only nominate one person per account. You have already submitted your nomination.</p>
-                                    <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php?url=profile#nominations" class="btn-submit">View My Nominations</a>
-                                    <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php?url=vote" class="btn-submit" style="margin-left: 10px;">Go to Voting</a>
+                            <div class="flex justify-center min-h-[400px] py-6">
+                                <div class="no-contestants-card bg-[#16161d] border border-white/10 rounded-2xl p-8 md:p-12 max-w-xl mx-auto text-center">
+                                    <h2 class="text-2xl font-bold text-white mb-4">You've Already Nominated</h2>
+                                    <p class="text-gray-400 mb-6">You can only nominate one person per account. You have already submitted your nomination.</p>
+                                    <div class="flex flex-wrap justify-center gap-3">
+                                        <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php?url=profile#nominations" class="inline-block px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white hover:opacity-90 transition">View My Nominations</a>
+                                        <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php?url=vote" class="inline-block px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white hover:opacity-90 transition">Go to Voting</a>
+                                    </div>
                                 </div>
                             </div>
                         <?php else: ?>
-                        <div class="nomination-form-wrapper" style="box-shadow: none; padding: 0;">
-                            <div class="nomination-form-card">
-                                <div class="form-header">
-                                    <h2 class="form-title">Nomination Details</h2>
-                                    <p class="form-description">Showcase amazing talent to the world</p>
+                        <div class="nomination-form-wrapper max-w-2xl mx-auto">
+                            <div class="nomination-form-card bg-[#16161d] border border-white/10 rounded-2xl p-6 md:p-10">
+                                <div class="form-header mb-8 text-center">
+                                    <h2 class="form-title text-2xl md:text-3xl font-extrabold text-white mb-2">Nomination Details</h2>
+                                    <p class="form-description text-gray-400">Showcase amazing talent to the world</p>
                                 </div>
 
                                 <form id="nominationForm" class="nomination-form" enctype="multipart/form-data">

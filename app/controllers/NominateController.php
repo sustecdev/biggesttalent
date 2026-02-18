@@ -10,6 +10,7 @@ class NominateController extends Controller
     {
         // Require Authentication
         if (!function_exists('isAuthenticated') || !isAuthenticated()) {
+            $_SESSION['redirect_after_login'] = 'nominate';
             $this->redirect('auth');
         }
 

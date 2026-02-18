@@ -1,3 +1,24 @@
+<?php
+function nominationVideoEmbed($videoUrl, $videoFile = '') {
+    if (empty($videoUrl)) return '';
+    $url = (string) $videoUrl;
+    $isDirect = preg_match('/\.(mp4|webm|ogg|mov)(\?|$)/i', $url) || ($videoFile && preg_match('/\.(mp4|webm|ogg|mov)(\?|$)/i', (string) $videoFile));
+    if ($isDirect) {
+        $esc = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+        return '<video controls class="w-full rounded-xl bg-black aspect-video" playsinline preload="metadata" onclick="event.stopPropagation()"><source src="' . $esc . '" type="video/mp4">Not supported</video>';
+    }
+    if (preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/', $url, $m)) {
+        $esc = htmlspecialchars('https://www.youtube.com/embed/' . $m[1] . '?rel=0', ENT_QUOTES, 'UTF-8');
+        return '<div class="aspect-video rounded-xl overflow-hidden bg-black"><iframe src="' . $esc . '" class="w-full h-full" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>';
+    }
+    if (preg_match('/vimeo\.com\/(?:video\/)?(\d+)/', $url, $m)) {
+        $esc = htmlspecialchars('https://player.vimeo.com/video/' . $m[1], ENT_QUOTES, 'UTF-8');
+        return '<div class="aspect-video rounded-xl overflow-hidden bg-black"><iframe src="' . $esc . '" class="w-full h-full" allowfullscreen></iframe></div>';
+    }
+    $esc = htmlspecialchars($url, ENT_QUOTES, 'UTF-8');
+    return '<div class="aspect-video rounded-xl overflow-hidden bg-black"><iframe src="' . $esc . '" class="w-full h-full" allowfullscreen></iframe></div>';
+}
+?>
 <main class="main-content">
     <?php
     // Prepare Data
@@ -116,27 +137,23 @@
                 <link rel="stylesheet" href="<?= URLROOT ?>/css/user-dashboard.css?v=<?= time() ?>">
 
                 <div id="nominationsTab" class="tab-content" style="display: none;">
-                    <div class="section-header" style="margin-bottom: 32px;">
-                        <h2 class="welcome-title"
-                            style="font-family: 'Outfit', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 8px;">
-                            My Nominations</h2>
-                        <p style="color: rgba(255,255,255,0.6); margin: 0;">Track the status and performance of your
-                            submissions</p>
+                    <div class="mb-8">
+                        <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">My Nominations</h2>
+                        <p class="text-gray-400">Track the status and performance of your submissions</p>
                     </div>
 
                     <div class="nominations-list">
                         <?php if (empty($data['userNominations'])): ?>
-                            <div class="no-nominations">
-                                <div style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;">🎵</div>
-                                <h3>No Nominations Yet</h3>
-                                <p>You haven't submitted any nominations yet to Biggest Talent Africa.</p>
-                                <a href="index.php?url=nominate" class="btn-submit"
-                                    style="display: inline-block; margin-top: 20px; text-decoration: none;">
-                                    Submit Request
+                            <div class="no-nominations flex flex-col items-center justify-center py-16 px-6 rounded-2xl border-2 border-dashed border-white/10 bg-white/[0.03]">
+                                <div class="text-6xl mb-6 opacity-50">🎵</div>
+                                <h3 class="text-xl font-bold text-white mb-3">No Nominations Yet</h3>
+                                <p class="text-gray-400 text-center max-w-sm mb-8">You haven't submitted any nominations yet to Biggest Talent Africa. Showcase amazing talent to the world!</p>
+                                <a href="<?= defined('URLROOT') ? URLROOT . '/index.php?url=nominate' : 'index.php?url=nominate' ?>" class="inline-flex items-center gap-2 px-8 py-4 rounded-full font-bold bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white hover:opacity-90 hover:-translate-y-0.5 transition-all shadow-lg shadow-[#cd217d]/20">
+                                    <span>+</span> Submit a Nomination
                                 </a>
                             </div>
                         <?php else: ?>
-                            <div class="nominations-grid">
+                            <div class="nominations-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                                 <?php foreach ($data['userNominations'] as $nom):
                                     $profilePhotoUrl = !empty($nom['profile_photo'])
                                         ? (strpos($nom['profile_photo'], 'http') === 0 ? $nom['profile_photo'] : (defined('URLROOT') ? URLROOT . '/' : '') . $nom['profile_photo'])
@@ -147,8 +164,16 @@
                                     } elseif (!empty($nom['vlink'])) {
                                         $videoUrl = $nom['vlink'];
                                     }
+                                    $status = strtolower($nom['status'] ?? 'pending');
+                                    $statusClasses = [
+                                        'approved' => 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30',
+                                        'pending' => 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+                                        'rejected' => 'bg-red-500/20 text-red-400 border-red-500/30'
+                                    ];
+                                    $statusClass = $statusClasses[$status] ?? $statusClasses['pending'];
                                 ?>
-                                    <div class="nomination-card nomination-card-clickable" role="button" tabindex="0"
+                                    <div class="nomination-card nomination-card-clickable group relative bg-[#16161d]/80 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:border-[#cd217d]/40 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#cd217d]/10 transition-all duration-300 cursor-pointer overflow-hidden"
+                                        role="button" tabindex="0"
                                         data-nom='<?= htmlspecialchars(json_encode([
                                             'aname' => $nom['aname'] ?? '',
                                             'title' => $nom['title'] ?? '',
@@ -168,63 +193,48 @@
                                             'vlink' => $nom['vlink'] ?? '',
                                             'video_file' => $nom['video_file'] ?? ''
                                         ]), ENT_QUOTES, 'UTF-8') ?>'
-                                        onclick="showNominationDetails(this)" onkeydown="if(event.key==='Enter')showNominationDetails(this)"
-                                        style="cursor: pointer;">
+                                        onclick="showNominationDetails(this)" onkeydown="if(event.key==='Enter')showNominationDetails(this)">
+                                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#cd217d] to-[#9a288d] opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
                                         <?php if ($profilePhotoUrl): ?>
-                                        <div class="nomination-photo" style="text-align: center; margin-bottom: 12px;">
-                                            <img src="<?= htmlspecialchars($profilePhotoUrl) ?>" alt="<?= htmlspecialchars($nom['aname']) ?>"
-                                                style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(205, 33, 125, 0.5);">
+                                        <div class="flex justify-center mb-5">
+                                            <img src="<?= htmlspecialchars($profilePhotoUrl) ?>" alt="<?= htmlspecialchars($nom['aname']) ?>" class="w-20 h-20 rounded-full object-cover border-2 border-[#cd217d]/50">
                                         </div>
                                         <?php endif; ?>
-                                        <div class="nomination-header">
-                                            <h3 class="nomination-title"><?= htmlspecialchars($nom['title'] ?? $nom['aname']) ?>
-                                            </h3>
-                                            <span
-                                                class="nomination-status badge-<?= strtolower($nom['status'] ?? 'pending') ?>">
-                                                <?= ucfirst($nom['status'] ?? 'pending') ?>
-                                            </span>
+
+                                        <div class="flex justify-between items-start gap-3 mb-5">
+                                            <h3 class="nomination-title flex-1 min-w-0 text-lg font-bold text-white line-clamp-2"><?= htmlspecialchars($nom['title'] ?? $nom['aname']) ?></h3>
+                                            <span class="nomination-status badge-<?= $status ?> flex-shrink-0 px-3 py-1 text-xs font-semibold uppercase rounded-full border <?= $statusClass ?>"><?= ucfirst($nom['status'] ?? 'pending') ?></span>
                                         </div>
 
-                                        <div class="nomination-info">
-                                            <div class="info-row">
-                                                <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                                                    </path>
-                                                </svg>
-                                                <span><span class="info-label">Artist:</span>
-                                                    <?= htmlspecialchars($nom['aname']) ?></span>
+                                        <div class="space-y-3 mb-5">
+                                            <div class="flex items-center gap-3 text-gray-400 text-sm">
+                                                <svg class="w-5 h-5 text-[#cd217d] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                                                <span><span class="text-gray-500">Artist:</span> <?= htmlspecialchars($nom['aname']) ?></span>
                                             </div>
-
-                                            <div class="info-row">
-                                                <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
-                                                    </path>
-                                                </svg>
-                                                <span><span class="info-label">From:</span>
-                                                    <?= htmlspecialchars($nom['country']) ?></span>
+                                            <div class="flex items-center gap-3 text-gray-400 text-sm">
+                                                <svg class="w-5 h-5 text-[#cd217d] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                                <span><span class="text-gray-500">From:</span> <?= htmlspecialchars($nom['country']) ?></span>
                                             </div>
-
-                                            <div class="info-row">
-                                                <svg class="info-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                                    </path>
-                                                </svg>
-                                                <span><span class="info-label">Date:</span>
-                                                    <?= date('M d, Y', strtotime($nom['date'])) ?></span>
+                                            <div class="flex items-center gap-3 text-gray-400 text-sm">
+                                                <svg class="w-5 h-5 text-[#cd217d] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                                                <span><span class="text-gray-500">Date:</span> <?= date('M d, Y', strtotime($nom['date'])) ?></span>
                                             </div>
                                         </div>
 
-                                        <div class="vote-count-badge">
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cd217d"
-                                                stroke-width="2">
-                                                <path d="M4.5 12.5l5 5 10-10" />
-                                            </svg>
-                                            <span class="vote-number"><?= number_format($nom['vote_count'] ?? 0) ?></span>
-                                            <span class="vote-label">Total Votes</span>
+                                        <?php if ($videoUrl): ?>
+                                        <div class="mb-4" onclick="event.stopPropagation()">
+                                            <?= nominationVideoEmbed($videoUrl, $nom['video_file'] ?? '') ?>
                                         </div>
+                                        <?php endif; ?>
+
+                                        <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                                            <svg class="w-5 h-5 text-[#cd217d]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                            <span class="vote-number font-bold text-white"><?= number_format($nom['vote_count'] ?? 0) ?></span>
+                                            <span class="vote-label text-gray-500 text-sm">votes</span>
+                                        </div>
+
+                                        <p class="mt-3 text-center text-gray-500 text-xs">Click for full details</p>
                                     </div>
                                 <?php endforeach; ?>
                             </div>
@@ -233,12 +243,10 @@
                 </div>
 
                 <!-- Nomination Details Modal -->
-                <div id="nominationDetailModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; padding: 20px;">
-                    <div style="background: #1a1a24; border-radius: 16px; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
-                        <div style="padding: 24px; position: relative;">
-                            <button onclick="closeNominationDetails()" style="position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.1); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 20px; line-height: 1;">&times;</button>
-                            <div id="nominationDetailContent"></div>
-                        </div>
+                <div id="nominationDetailModal" class="fixed inset-0 z-[10000] hidden items-center justify-center p-4 md:p-6 bg-black/80 backdrop-blur-sm" style="display: none;">
+                    <div class="relative w-full max-w-2xl max-h-[90vh] overflow-hidden rounded-2xl border border-white/10 bg-[#1a1a24] shadow-2xl shadow-black/50">
+                        <button onclick="closeNominationDetails()" class="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 transition text-xl leading-none">&times;</button>
+                        <div id="nominationDetailContent" class="overflow-y-auto max-h-[90vh] p-6 md:p-8"></div>
                     </div>
                 </div>
 
@@ -340,38 +348,54 @@
         const data = JSON.parse(cardEl.getAttribute('data-nom') || '{}');
         const modal = document.getElementById('nominationDetailModal');
         const content = document.getElementById('nominationDetailContent');
-        const urlRoot = '<?= defined("URLROOT") ? URLROOT : "" ?>';
+        const status = (data.status || 'pending').toLowerCase();
+        const statusClasses = { approved: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30', pending: 'bg-amber-500/20 text-amber-400 border-amber-500/30', rejected: 'bg-red-500/20 text-red-400 border-red-500/30' };
+        const statusClass = statusClasses[status] || statusClasses.pending;
+        const statusText = (data.status || 'pending').charAt(0).toUpperCase() + (data.status || 'pending').slice(1);
 
-        let html = '';
+        let html = '<div class="space-y-6">';
         if (data.profile_photo) {
-            html += '<div style="text-align: center; margin-bottom: 20px;"><img src="' + escapeHtml(data.profile_photo) + '" alt="" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(205, 33, 125, 0.5);"></div>';
+            html += '<div class="flex justify-center"><img src="' + escapeHtml(data.profile_photo) + '" alt="" class="w-28 h-28 rounded-full object-cover border-2 border-[#cd217d]/50"></div>';
         }
-        html += '<h2 style="font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 8px;">' + escapeHtml(data.title || data.aname) + '</h2>';
-        html += '<span class="nomination-status badge-' + (data.status || 'pending').toLowerCase() + '" style="display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-bottom: 16px;">' + escapeHtml((data.status || 'pending').charAt(0).toUpperCase() + (data.status || 'pending').slice(1)) + '</span>';
-        html += '<div style="color: rgba(255,255,255,0.85); font-size: 14px; line-height: 1.7;">';
-        html += '<p style="margin: 8px 0;"><strong>Artist:</strong> ' + escapeHtml(data.aname) + '</p>';
-        if (data.gender) html += '<p style="margin: 8px 0;"><strong>Gender:</strong> ' + escapeHtml(data.gender) + '</p>';
-        if (data.age) html += '<p style="margin: 8px 0;"><strong>Age:</strong> ' + escapeHtml(String(data.age)) + '</p>';
-        if (data.nominee_email) html += '<p style="margin: 8px 0;"><strong>Email:</strong> <a href="mailto:' + escapeHtml(data.nominee_email) + '">' + escapeHtml(data.nominee_email) + '</a></p>';
-        if (data.nominee_phone) html += '<p style="margin: 8px 0;"><strong>Phone:</strong> <a href="tel:' + escapeHtml(data.nominee_phone) + '">' + escapeHtml(data.nominee_phone) + '</a></p>';
-        html += '<p style="margin: 8px 0;"><strong>Performance:</strong> ' + escapeHtml(data.title || '-') + '</p>';
-        if (data.category_name) html += '<p style="margin: 8px 0;"><strong>Category:</strong> ' + escapeHtml(data.category_name) + '</p>';
-        html += '<p style="margin: 8px 0;"><strong>Location:</strong> ' + escapeHtml(data.country) + (data.province ? ', ' + escapeHtml(data.province) : '') + '</p>';
-        html += '<p style="margin: 8px 0;"><strong>Submitted:</strong> ' + (data.date ? new Date(data.date).toLocaleDateString() : '-') + '</p>';
-        html += '<p style="margin: 8px 0;"><strong>Total Votes:</strong> ' + (data.vote_count || 0).toLocaleString() + '</p>';
-        if (data.description) html += '<p style="margin: 12px 0 8px;"><strong>Description:</strong></p><p style="margin: 0 0 16px; white-space: pre-wrap;">' + escapeHtml(data.description) + '</p>';
+        html += '<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">';
+        html += '<h2 class="text-2xl font-bold text-white">' + escapeHtml(data.title || data.aname) + '</h2>';
+        html += '<span class="px-4 py-2 text-xs font-semibold uppercase rounded-full border flex-shrink-0 w-fit ' + statusClass + '">' + escapeHtml(statusText) + '</span>';
+        html += '</div>';
+
+        html += '<div class="grid gap-4 sm:grid-cols-2">';
+        html += '<div class="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10"><svg class="w-6 h-6 text-[#cd217d] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg><div><p class="text-xs text-gray-500">Artist</p><p class="text-white font-medium">' + escapeHtml(data.aname) + '</p></div></div>';
+        if (data.category_name) html += '<div class="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10"><svg class="w-6 h-6 text-[#cd217d] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path></svg><div><p class="text-xs text-gray-500">Category</p><p class="text-white font-medium">' + escapeHtml(data.category_name) + '</p></div></div>';
+        html += '<div class="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10"><svg class="w-6 h-6 text-[#cd217d] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><div><p class="text-xs text-gray-500">Location</p><p class="text-white font-medium">' + escapeHtml(data.country) + (data.province ? ', ' + escapeHtml(data.province) : '') + '</p></div></div>';
+        html += '<div class="flex items-center gap-3 p-4 rounded-xl bg-white/5 border border-white/10"><svg class="w-6 h-6 text-[#cd217d] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg><div><p class="text-xs text-gray-500">Votes</p><p class="text-white font-bold">' + (data.vote_count || 0).toLocaleString() + '</p></div></div>';
+        html += '</div>';
+
+        html += '<div class="space-y-3 text-sm text-gray-400">';
+        if (data.gender) html += '<p><span class="text-gray-500">Gender:</span> ' + escapeHtml(data.gender) + '</p>';
+        if (data.age) html += '<p><span class="text-gray-500">Age:</span> ' + escapeHtml(String(data.age)) + '</p>';
+        if (data.nominee_email) html += '<p><span class="text-gray-500">Email:</span> <a href="mailto:' + escapeHtml(data.nominee_email) + '" class="text-[#cd217d] hover:underline">' + escapeHtml(data.nominee_email) + '</a></p>';
+        if (data.nominee_phone) html += '<p><span class="text-gray-500">Phone:</span> <a href="tel:' + escapeHtml(data.nominee_phone) + '" class="text-[#cd217d] hover:underline">' + escapeHtml(data.nominee_phone) + '</a></p>';
+        html += '<p><span class="text-gray-500">Submitted:</span> ' + (data.date ? new Date(data.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : '-') + '</p>';
+        html += '</div>';
+
+        if (data.description) html += '<div class="pt-2 border-t border-white/10"><p class="text-xs text-gray-500 mb-2">Description</p><p class="text-gray-300 text-sm whitespace-pre-wrap leading-relaxed">' + escapeHtml(data.description) + '</p></div>';
+
         if (data.video_url) {
-            html += '<a href="' + escapeHtml(data.video_url) + '" target="_blank" rel="noopener" style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #cd217d, #a51a64); color: white; border-radius: 10px; font-weight: 600; text-decoration: none; margin-top: 12px;">Watch Video</a>';
+            html += '<div class="pt-2 border-t border-white/10"><p class="text-xs text-gray-500 mb-3">Performance Video</p>' + getVideoEmbedHtml(data.video_url, data.video_file) + '</div>';
         }
         html += '</div>';
 
         content.innerHTML = html;
         modal.style.display = 'flex';
+        modal.classList.remove('hidden');
         document.body.style.overflow = 'hidden';
     }
 
     function closeNominationDetails() {
-        document.getElementById('nominationDetailModal').style.display = 'none';
+        const modal = document.getElementById('nominationDetailModal');
+        modal.querySelectorAll('video').forEach(v => { v.pause(); });
+        modal.querySelectorAll('iframe').forEach(f => { f.src = 'about:blank'; });
+        modal.style.display = 'none';
+        modal.classList.add('hidden');
         document.body.style.overflow = '';
     }
 
@@ -380,6 +404,27 @@
         const d = document.createElement('div');
         d.textContent = str;
         return d.innerHTML;
+    }
+
+    function getVideoEmbedHtml(videoUrl, videoFile) {
+        if (!videoUrl) return '';
+        const url = String(videoUrl);
+        const isDirectVideo = /\.(mp4|webm|ogg|mov)(\?|$)/i.test(url) || (videoFile && /\.(mp4|webm|ogg|mov)(\?|$)/i.test(String(videoFile)));
+        if (isDirectVideo) {
+            return '<video controls class="w-full rounded-xl bg-black aspect-video" playsinline preload="metadata"><source src="' + escapeHtml(url) + '" type="video/mp4">Your browser does not support the video tag.</video>';
+        }
+        let embedSrc = '';
+        const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+        const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
+        if (ytMatch) {
+            embedSrc = 'https://www.youtube.com/embed/' + ytMatch[1] + '?rel=0';
+        } else if (vimeoMatch) {
+            embedSrc = 'https://player.vimeo.com/video/' + vimeoMatch[1];
+        }
+        if (embedSrc) {
+            return '<div class="aspect-video rounded-xl overflow-hidden bg-black"><iframe src="' + escapeHtml(embedSrc) + '" class="w-full h-full" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"></iframe></div>';
+        }
+        return '<div class="aspect-video rounded-xl overflow-hidden bg-black"><iframe src="' + escapeHtml(url) + '" class="w-full h-full" allowfullscreen></iframe></div>';
     }
 
     document.getElementById('nominationDetailModal').addEventListener('click', function(e) {

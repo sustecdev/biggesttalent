@@ -11,22 +11,17 @@
     ?>
 
     <div class="profile-layout">
-        <!-- Sidebar -->
-        <!-- Sidebar -->
         <?php require_once APPROOT . '/views/partials/user_sidebar.php'; ?>
 
-        <!-- Main Content -->
         <div class="profile-main">
-            <!-- Top Header -->
-            <header class="dashboard-top-bar">
-                <h1 class="dashboard-page-title"><?= $data['page_title'] ?? 'Vote' ?></h1>
+            <header class="dashboard-top-bar flex flex-wrap justify-between items-center gap-3">
+                <h1 class="dashboard-page-title text-lg sm:text-xl font-extrabold text-white"><?= $data['page_title'] ?? 'Vote' ?></h1>
 
-                <div class="dashboard-top-actions">
-                    <!-- Search Bar -->
-                    <div class="nav-search-form" style="margin-right: 15px; margin-left: 0;">
-                        <input type="text" id="contestantSearch" class="nav-search-input"
-                            placeholder="Search contestant..." style="width: 200px;">
-                        <button class="nav-search-button">
+                <div class="dashboard-top-actions flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <div class="flex items-center w-full md:w-auto bg-[#1a1a24] border border-white/10 rounded-full pl-4 pr-1 py-1 focus-within:border-[#cd217d] focus-within:ring-2 focus-within:ring-[#cd217d]/20">
+                        <input type="text" id="contestantSearch" class="flex-1 min-w-0 bg-transparent border-0 text-white placeholder-gray-500 text-sm py-2 focus:outline-none w-36 md:w-48"
+                            placeholder="Search contestant...">
+                        <button type="button" aria-label="Search" class="bg-[#cd217d] hover:bg-[#a51a64] text-white p-2 rounded-full transition-all">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                 stroke-linejoin="round">
@@ -36,47 +31,40 @@
                         </button>
                     </div>
 
-
-                    <div class="user-id-badge">
-                        <span class="user-id-number">#<?= htmlspecialchars($userProfile['pernum'] ?? '') ?></span>
-                        <span class="user-id-label">VERIFIED USER</span>
+                    <div class="user-id-badge text-right">
+                        <span class="user-id-number block text-sm font-extrabold text-white">#<?= htmlspecialchars($userProfile['pernum'] ?? $_SESSION['pernum'] ?? '') ?></span>
+                        <span class="user-id-label text-[10px] text-gray-500 uppercase font-semibold">VERIFIED USER</span>
                     </div>
                     <?php if (isset($data['activeSeason']) && $data['activeSeason']): ?>
-                        <div class="user-id-badge"
-                            style="background: linear-gradient(135deg, var(--primary), var(--secondary)); border-color: var(--primary); padding: 10px 18px;">
-                            <span class="user-id-number"
-                                style="font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 160px; display: block;">
-                                <?= htmlspecialchars($data['activeSeason']['title']) ?>
-                            </span>
-                            <span class="user-id-label">VOTING SEASON</span>
+                        <div class="bg-gradient-to-br from-[#cd217d] to-[#9a288d] border border-[#cd217d] px-4 py-2.5 rounded-lg text-right">
+                            <span class="block text-sm font-bold text-white truncate max-w-40"><?= htmlspecialchars($data['activeSeason']['title']) ?></span>
+                            <span class="text-[10px] text-white/80 uppercase font-semibold">VOTING SEASON</span>
                         </div>
                     <?php endif; ?>
-                    <!-- Avatar Removed -->
                 </div>
             </header>
 
-            <div class="dashboard-content" style="padding: 40px;">
-                <!-- Voting Section -->
-                <section class="voting-section" style="padding-top: 0; min-height: auto;">
-                    <div class="container" style="max-width: 100%; padding: 0;">
+            <div class="vote-page-content dashboard-content p-4 md:p-6 lg:p-10 w-full min-h-screen">
+                <section class="voting-section">
+                    <div class="w-full max-w-full p-0">
                         <?php if (!empty($data['voting_closed'])): ?>
-                            <div class="no-contestants">
-                                <div class="no-contestants-card">
+                            <div class="flex justify-center items-center min-h-[400px] py-6">
+                                <div class="no-contestants-card bg-[#16161d] border border-white/10 rounded-2xl p-8 md:p-12 max-w-md mx-auto text-center">
                                     <h2>Voting Is Currently Closed</h2>
                                     <p>Voting for this season is not open yet. Please stay tuned to our social media channels for updates on when voting begins!</p>
-                                    <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php" class="btn-submit">Back to Home</a>
+                                    <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php" class="btn-submit px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white hover:opacity-90 transition">Back to Home</a>
                                 </div>
                             </div>
                         <?php elseif (empty($data['contestants'])): ?>
-                            <div class="no-contestants">
-                                <div class="no-contestants-card">
+                            <div class="flex justify-center items-center min-h-[400px] py-6">
+                                <div class="no-contestants-card bg-[#16161d] border border-white/10 rounded-2xl p-8 md:p-12 max-w-md mx-auto text-center">
                                     <h2>No Contestants Available</h2>
                                     <p>There are no approved contestants available for voting at this time.</p>
-                                    <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php" class="btn-submit">Back to Home</a>
+                                    <a href="<?= defined('URLROOT') ? URLROOT : '' ?>/index.php" class="btn-submit px-6 py-3 rounded-full font-semibold bg-gradient-to-r from-[#cd217d] to-[#9a288d] text-white hover:opacity-90 transition">Back to Home</a>
                                 </div>
                             </div>
                         <?php else: ?>
-                            <div class="contestants-grid">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 contestants-grid">
                                 <?php foreach ($data['contestants'] as $index => $contestant):
                                     // Note: Using legacy function calls inside view is not ideal but pragmatic for this step
                                     $votesToday = function_exists('getVotesToday') ? getVotesToday($contestant['id'], $data['userID'], $data['userIP']) : 0;
@@ -124,72 +112,45 @@
                                         'video_file' => $contestant['video_file'] ?? ''
                                     ];
                                     ?>
-                                    <div class="contestant-card" data-id="<?= $contestant['id'] ?>"
-                                        data-contestant="<?= htmlspecialchars(json_encode($contestantData), ENT_QUOTES, 'UTF-8') ?>"
-                                        style="background: rgba(30, 30, 40, 0.8); border-radius: 16px; padding: 30px; border: 1px solid rgba(255,255,255,0.1);">
+                                    <div class="contestant-card relative bg-[#1e1e28]/80 rounded-2xl p-6 md:p-8 border border-white/10 hover:border-[#cd217d]/50 hover:-translate-y-1 transition-all" data-id="<?= $contestant['id'] ?>"
+                                        data-contestant="<?= htmlspecialchars(json_encode($contestantData), ENT_QUOTES, 'UTF-8') ?>">
 
-                                        <div class="contestant-rank" style="position: absolute; top: 15px; right: 15px;">
-                                            <span class="rank-number"
-                                                style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 8px 14px; border-radius: 50%; font-weight: 700; font-size: 14px;">#<?= $index + 1 ?></span>
+                                    ?>
+                                        <div class="absolute top-4 right-4">
+                                            <span class="bg-gradient-to-br from-[#cd217d] to-[#9a288d] text-white px-3.5 py-2 rounded-full font-bold text-sm">#<?= $index + 1 ?></span>
                                         </div>
 
                                         <?php if ($profilePhotoUrl): ?>
-                                        <div class="contestant-photo" style="margin-bottom: 16px; text-align: center;">
-                                            <img src="<?= htmlspecialchars($profilePhotoUrl) ?>" alt="<?= htmlspecialchars($contestant['aname']) ?>"
-                                                style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(205, 33, 125, 0.5);">
+                                        <div class="mb-4 text-center">
+                                            <img src="<?= htmlspecialchars($profilePhotoUrl) ?>" alt="<?= htmlspecialchars($contestant['aname']) ?>" class="w-24 h-24 rounded-full object-cover border-2 border-[#cd217d]/50 mx-auto">
                                         </div>
                                         <?php endif; ?>
 
-                                        <div class="contestant-info" style="margin-bottom: 20px;">
-                                            <h3 class="contestant-name"
-                                                style="font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 8px;">
-                                                <?= htmlspecialchars($contestant['aname']) ?>
-                                            </h3>
-                                            <p class="contestant-country" style="color: #888; font-size: 14px;">
-                                                <?= htmlspecialchars($contestant['country_name'] ?? $contestant['country']) ?>
-                                            </p>
+                                        <div class="contestant-info mb-5">
+                                            <h3 class="contestant-name text-xl font-bold text-white mb-2"><?= htmlspecialchars($contestant['aname']) ?></h3>
+                                            <p class="contestant-country text-gray-500 text-sm"><?= htmlspecialchars($contestant['country_name'] ?? $contestant['country']) ?></p>
                                         </div>
 
-                                        <div class="contestant-votes"
-                                            style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center;">
-                                            <div class="vote-count-display">
-                                                <span class="vote-number" id="votes-<?= $contestant['id'] ?>"
-                                                    style="font-size: 36px; font-weight: 700; color: var(--primary); display: block;"><?= number_format($voteCount) ?></span>
-                                                <span class="vote-label"
-                                                    style="color: #888; font-size: 14px; text-transform: uppercase; letter-spacing: 1px;"><?= $voteCount == 1 ? 'Vote' : 'Votes' ?></span>
-                                            </div>
+                                        <div class="bg-black/30 rounded-xl p-5 mb-5 text-center">
+                                            <span class="vote-number block text-3xl font-bold text-[#cd217d]" id="votes-<?= $contestant['id'] ?>"><?= number_format($voteCount) ?></span>
+                                            <span class="text-gray-500 text-xs uppercase tracking-wider"><?= $voteCount == 1 ? 'Vote' : 'Votes' ?></span>
                                         </div>
 
                                         <?php if ($videoUrl): ?>
-                                            <div class="contestant-video" style="margin-bottom: 15px;">
-                                                <button
-                                                    onclick="openVideoModal('<?= htmlspecialchars($videoUrl) ?>', '<?= $videoType ?>')"
-                                                    class="btn-video"
-                                                    style="display: block; width: 100%; padding: 14px; background: transparent; border: 2px solid rgba(255,255,255,0.2); border-radius: 12px; color: #fff; font-weight: 600; cursor: pointer; text-align: center; font-size: 15px; transition: all 0.3s ease;">
-                                                    Watch Video
-                                                </button>
+                                            <div class="mb-4">
+                                                <button onclick="openVideoModal('<?= htmlspecialchars($videoUrl) ?>', '<?= $videoType ?>')" class="w-full py-3.5 bg-transparent border-2 border-white/20 rounded-xl text-white font-semibold text-center text-sm hover:border-[#cd217d]/50 transition-all">Watch Video</button>
                                             </div>
                                         <?php endif; ?>
 
-                                        <div style="margin-bottom: 15px;">
-                                            <button type="button" onclick="showContestantDetails(this)"
-                                                style="display: block; width: 100%; padding: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: rgba(255,255,255,0.9); font-weight: 600; cursor: pointer; text-align: center; font-size: 14px; transition: all 0.2s ease;">
-                                                View Full Details
-                                            </button>
+                                        <div class="mb-4">
+                                            <button type="button" onclick="showContestantDetails(this)" class="w-full py-3 bg-white/5 border border-white/15 rounded-lg text-white/90 font-semibold text-center text-sm hover:bg-white/10 transition">View Full Details</button>
                                         </div>
 
                                         <div class="contestant-action">
                                             <?php if ($canVote): ?>
-                                                <button class="btn-vote"
-                                                    onclick="castVote(<?= $contestant['id'] ?>, '<?= htmlspecialchars($contestant['aname'], ENT_QUOTES) ?>')"
-                                                    style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; border-radius: 12px; color: white; font-weight: 700; font-size: 16px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all 0.3s ease;">
-                                                    Vote Now
-                                                </button>
+                                                <button class="btn-vote w-full py-4 bg-gradient-to-r from-[#cd217d] to-[#9a288d] border-0 rounded-xl text-white font-bold text-base uppercase tracking-wider cursor-pointer hover:opacity-90 hover:-translate-y-0.5 transition-all" onclick="castVote(<?= $contestant['id'] ?>, '<?= htmlspecialchars($contestant['aname'], ENT_QUOTES) ?>')">Vote Now</button>
                                             <?php else: ?>
-                                                <button class="btn-vote btn-vote-disabled" disabled
-                                                    style="width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--secondary)); opacity: 0.5; border: none; border-radius: 12px; color: white; font-weight: 700; font-size: 16px; cursor: not-allowed; text-transform: uppercase; letter-spacing: 1px;">
-                                                    Voted Already
-                                                </button>
+                                                <button class="btn-vote btn-vote-disabled w-full py-4 bg-gradient-to-r from-[#cd217d] to-[#9a288d] opacity-50 border-0 rounded-xl text-white font-bold text-base uppercase tracking-wider cursor-not-allowed" disabled>Voted Already</button>
                                             <?php endif; ?>
                                         </div>
                                     </div>
