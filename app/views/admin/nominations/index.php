@@ -133,6 +133,11 @@
                                         onclick="updateStatus(<?= $nom['id'] ?>, 'rejected')">Reject</button>
                                 </div>
                             <?php endif; ?>
+                            <div style="margin-top: 6px;">
+                                <button type="button" class="btn-admin btn-sm btn-danger" onclick="deleteNomination(<?= $nom['id'] ?>)">
+                                    Delete
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -233,6 +238,31 @@
             },
             error: function () {
                 alert('Error: Failed to update status. Please try again.');
+            }
+        });
+    }
+
+    function deleteNomination(id) {
+        if (!confirm('Are you sure you want to delete this nomination? This action cannot be undone.')) {
+            return;
+        }
+
+        $.ajax({
+            url: '<?= URLROOT ?>/admin/nominations/delete',
+            type: 'POST',
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert('Error: ' + (response.message || 'Failed to delete nomination'));
+                }
+            },
+            error: function () {
+                alert('Error: Failed to delete nomination. Please try again.');
             }
         });
     }

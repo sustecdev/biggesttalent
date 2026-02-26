@@ -1,4 +1,4 @@
-﻿# === SENSITIVE FILES - DO NOT PUSH ===
+# === SENSITIVE FILES - DO NOT PUSH ===
 
 api_keys.php
 .env
@@ -52,4 +52,6 @@ logs/
 *.wmv
 
 # === Uploads ===
+public/uploads/
+public/media/
 

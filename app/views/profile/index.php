@@ -68,7 +68,6 @@ function nominationVideoEmbed($videoUrl, $videoFile = '') {
                     <div class="user-id-badge">
                         <span
                             class="user-id-number">#<?= htmlspecialchars($userProfile['pernum'] ?? $_SESSION['pernum']) ?></span>
-                        <span class="user-id-label">VERIFIED USER</span>
                     </div>
                     <!-- Avatar Removed -->
                 </div>

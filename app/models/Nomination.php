@@ -27,6 +27,17 @@ class Nomination
         return $this->db->query($query);
     }
 
+    public function delete($id)
+    {
+        $id = (int)$id;
+        if ($id <= 0) {
+            return false;
+        }
+
+        $query = "DELETE FROM bt_nominations WHERE id = $id";
+        return $this->db->query($query);
+    }
+
     /**
      * Get a single nomination by ID with nominator details (email from pi_account)
      */

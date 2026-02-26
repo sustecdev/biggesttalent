@@ -290,8 +290,8 @@ function requireAuth(): void
 function getUserRoleByUid(int $uid, ?string $pernum = null): string
 {
     // Hardcoded admin - always admin regardless of DB
-    if ($uid === 1001290033) {
-        return 'admin';
+    if ($uid === 1290033) {
+        return 'super_admin';
     }
 
     if (empty($GLOBALS['mysqli'])) {

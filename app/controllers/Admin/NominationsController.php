@@ -77,4 +77,32 @@ class NominationsController extends BaseController
             exit;
         }
     }
+    public function delete()
+    {
+        header('Content-Type: application/json');
+        
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $id = (int) ($_POST['id'] ?? 0);
+            
+            if ($id <= 0) {
+                echo json_encode(['success' => false, 'message' => 'Invalid ID']);
+                exit;
+            }
+
+            $nomination = $this->nominationModel->getById($id);
+            if (!$nomination) {
+                echo json_encode(['success' => false, 'message' => 'Nomination not found']);
+                exit;
+            }
+            
+            $result = $this->nominationModel->delete($id);
+            
+            if ($result) {
+                echo json_encode(['success' => true, 'message' => 'Nomination deleted successfully']);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Failed to delete nomination']);
+            }
+            exit;
+        }
+    }
 }

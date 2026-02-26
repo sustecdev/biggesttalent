@@ -114,14 +114,14 @@ class ProfileController extends Controller
         // Handle profile picture upload
         $picPath = null;
         if (isset($_FILES['profile_pic']) && $_FILES['profile_pic']['error'] === 0) {
-            $uploadDir = 'uploads/profiles/';
-            // Ensure dir exists (relative to public usually, need to check where index.php is)
-            // Since we are in public/index.php, 'uploads' should be in public/uploads ?? 
-            // Original code likely put it in root/uploads. Let's stick to public/uploads for now or root if that's where legacy expects.
-            // But legacy code did 'uploads/profiles/'.
+            // Use media/profiles/ - new path PHP creates (uploads/ may have bad perms from FTP)
+            $uploadDirAbs = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'profiles' . DIRECTORY_SEPARATOR;
 
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0755, true);
+            if (!is_dir($uploadDirAbs)) {
+                mkdir($uploadDirAbs, 0775, true);
+            }
+            if (!is_writable($uploadDirAbs)) {
+                @chmod($uploadDirAbs, 0777);
             }
 
             $file = $_FILES['profile_pic'];
@@ -129,9 +129,11 @@ class ProfileController extends Controller
             $maxSize = 5 * 1024 * 1024; // 5MB
 
             if (in_array($file['type'], $allowedTypes) && $file['size'] <= $maxSize) {
-                $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-                $picPath = 'uploads/profiles/' . uniqid('profile_') . '.' . $ext;
-                if (!move_uploaded_file($file['tmp_name'], $picPath)) {
+                $ext = pathinfo($file['name'], PATHINFO_EXTENSION) ?: 'jpg';
+                $filename = uniqid('profile_') . '.' . $ext;
+                $picPath = 'media/profiles/' . $filename;
+                $fullPath = $uploadDirAbs . $filename;
+                if (!move_uploaded_file($file['tmp_name'], $fullPath)) {
                     $updateError = 'Failed to upload profile picture.';
                     return;
                 }

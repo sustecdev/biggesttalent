@@ -33,7 +33,6 @@
 
                     <div class="user-id-badge text-right">
                         <span class="user-id-number block text-sm font-extrabold text-white">#<?= htmlspecialchars($userProfile['pernum'] ?? $_SESSION['pernum'] ?? '') ?></span>
-                        <span class="user-id-label text-[10px] text-gray-500 uppercase font-semibold">VERIFIED USER</span>
                     </div>
                     <?php if (isset($data['activeSeason']) && $data['activeSeason']): ?>
                         <div class="bg-gradient-to-br from-[#cd217d] to-[#9a288d] border border-[#cd217d] px-4 py-2.5 rounded-lg text-right">

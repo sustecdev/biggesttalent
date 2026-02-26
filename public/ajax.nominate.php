@@ -114,6 +114,7 @@ if ($uid <= 0) {
 // Video validation
 $videoFile = null;
 $videoFilePath = null;
+$fullVideoPath = null;
 $thumbnailPath = null;
 $videoDuration = null;
 
@@ -174,20 +175,35 @@ if ($uploadType === 'file') {
         exit;
     }
 
-    // Create upload directory
-    $uploadDir = 'uploads/videos/';
-    if (!is_dir($uploadDir)) {
-        mkdir($uploadDir, 0755, true);
+    // Use media/videos/ - a new path PHP creates (uploads/ may have bad perms from FTP)
+    $uploadDirAbs = __DIR__ . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'videos' . DIRECTORY_SEPARATOR;
+    if (!is_dir($uploadDirAbs)) {
+        if (!mkdir($uploadDirAbs, 0775, true)) {
+            print "Failed to create video upload directory. Please contact support.";
+            exit;
+        }
+    }
+    if (!is_writable($uploadDirAbs)) {
+        @chmod($uploadDirAbs, 0777);
+        if (!is_writable($uploadDirAbs)) {
+            print "Video upload directory is not writable. Set permissions to 755 or 775 on public/media/videos via FTP or File Manager.";
+            exit;
+        }
     }
 
     // Generate unique filename
     $extension = pathinfo($videoFile['name'], PATHINFO_EXTENSION);
     $filename = uniqid('video_') . '_' . time() . '.' . $extension;
-    $videoFilePath = $uploadDir . $filename;
+    $videoFilePath = 'media/videos/' . $filename;
+    $fullVideoPath = $uploadDirAbs . $filename;
 
     // Move uploaded file
-    if (!move_uploaded_file($videoFile['tmp_name'], $videoFilePath)) {
-        print "Failed to upload video file.";
+    if (!is_uploaded_file($videoFile['tmp_name'])) {
+        print "Upload failed. The file may exceed server limits (check upload_max_filesize and post_max_size in php.ini).";
+        exit;
+    }
+    if (!move_uploaded_file($videoFile['tmp_name'], $fullVideoPath)) {
+        print "Failed to upload video file. The server may be out of disk space or the upload directory may not be writable.";
         exit;
     }
 
@@ -220,6 +236,7 @@ if ($uploadType === 'file') {
 
 // Profile picture (optional)
 $profilePhotoPath = null;
+$profilePhotoFullPath = null;
 if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPLOAD_ERR_OK) {
     $profileFile = $_FILES['profile_photo'];
     if ($profileFile['size'] > 2 * 1024 * 1024) {
@@ -234,14 +251,19 @@ if (isset($_FILES['profile_photo']) && $_FILES['profile_photo']['error'] === UPL
         print "Profile picture must be JPG, PNG, WebP or GIF.";
         exit;
     }
-    $profileDir = 'uploads/profiles/';
-    if (!is_dir($profileDir)) {
-        mkdir($profileDir, 0755, true);
+    // Use media/profiles/ - new path PHP creates (uploads/ may have bad perms from FTP)
+    $profileDirAbs = __DIR__ . DIRECTORY_SEPARATOR . 'media' . DIRECTORY_SEPARATOR . 'profiles' . DIRECTORY_SEPARATOR;
+    if (!is_dir($profileDirAbs)) {
+        mkdir($profileDirAbs, 0775, true);
+    }
+    if (!is_writable($profileDirAbs)) {
+        @chmod($profileDirAbs, 0777);
     }
     $ext = pathinfo($profileFile['name'], PATHINFO_EXTENSION) ?: 'jpg';
     $profileFilename = uniqid('profile_') . '_' . time() . '.' . $ext;
-    $profilePhotoPath = $profileDir . $profileFilename;
-    if (!move_uploaded_file($profileFile['tmp_name'], $profilePhotoPath)) {
+    $profilePhotoPath = 'media/profiles/' . $profileFilename;
+    $profilePhotoFullPath = $profileDirAbs . $profileFilename;
+    if (!move_uploaded_file($profileFile['tmp_name'], $profilePhotoFullPath)) {
         print "Failed to upload profile picture.";
         exit;
     }
@@ -395,12 +417,12 @@ if ($stmt->execute()) {
     $error = $stmt->error;
     $stmt->close();
 
-    // If file was uploaded but DB insert failed, delete the files
-    if ($uploadType === 'file' && $videoFilePath && file_exists($videoFilePath)) {
-        unlink($videoFilePath);
+    // If file was uploaded but DB insert failed, delete the files (use absolute paths)
+    if ($uploadType === 'file' && $videoFilePath && isset($fullVideoPath) && file_exists($fullVideoPath)) {
+        unlink($fullVideoPath);
     }
-    if ($profilePhotoPath && file_exists($profilePhotoPath)) {
-        unlink($profilePhotoPath);
+    if ($profilePhotoPath && $profilePhotoFullPath && file_exists($profilePhotoFullPath)) {
+        unlink($profilePhotoFullPath);
     }
 
     print "Error: " . $error;

@@ -24,7 +24,6 @@
 
                     <div class="user-id-badge">
                         <span class="user-id-number block text-sm font-extrabold text-white">#<?= htmlspecialchars($userProfile['pernum'] ?? $_SESSION['pernum'] ?? '') ?></span>
-                        <span class="user-id-label text-[10px] text-gray-500 uppercase font-semibold">VERIFIED USER</span>
                     </div>
                 </div>
             </header>
@@ -114,67 +113,26 @@
                                             <?php endif; ?>
                                         <?php endif; ?>
 
-                                        <div class="form-group">
-                                            <label for="title" class="form-label">
-                                                Performance Title <span class="required">*</span>
-                                            </label>
-                                            <select class="form-input form-select" id="title" name="title" required>
-                                                <option value="">-- Select a performance title --</option>
-                                                <option value="Solo Vocal Performance">Solo Vocal Performance</option>
-                                                <option value="Group Vocal Performance">Group Vocal Performance</option>
-                                                <option value="Acoustic Guitar Performance">Acoustic Guitar Performance
-                                                </option>
-                                                <option value="Electric Guitar Performance">Electric Guitar Performance
-                                                </option>
-                                                <option value="Piano Performance">Piano Performance</option>
-                                                <option value="Drum Performance">Drum Performance</option>
-                                                <option value="Bass Performance">Bass Performance</option>
-                                                <option value="DJ Performance">DJ Performance</option>
-                                                <option value="Solo Dance Performance">Solo Dance Performance</option>
-                                                <option value="Group Dance Performance">Group Dance Performance</option>
-                                                <option value="Hip Hop Dance">Hip Hop Dance</option>
-                                                <option value="Contemporary Dance">Contemporary Dance</option>
-                                                <option value="Traditional Dance">Traditional Dance</option>
-                                                <option value="Ballet Performance">Ballet Performance</option>
-                                                <option value="Stand-up Comedy">Stand-up Comedy</option>
-                                                <option value="Comedy Skit">Comedy Skit</option>
-                                                <option value="Magic Show">Magic Show</option>
-                                                <option value="Illusion Performance">Illusion Performance</option>
-                                                <option value="Acting Monologue">Acting Monologue</option>
-                                                <option value="Dramatic Scene">Dramatic Scene</option>
-                                                <option value="Poetry Recitation">Poetry Recitation</option>
-                                                <option value="Spoken Word Performance">Spoken Word Performance</option>
-                                                <option value="Beatboxing Performance">Beatboxing Performance</option>
-                                                <option value="Acrobatic Performance">Acrobatic Performance</option>
-                                                <option value="Instrumental Solo">Instrumental Solo</option>
-                                                <option value="Band Performance">Band Performance</option>
-                                                <option value="Choir Performance">Choir Performance</option>
-                                                <option value="Rap Performance">Rap Performance</option>
-                                                <option value="Other Performance">Other Performance</option>
-                                            </select>
-                                        </div>
+                                        <input type="hidden" id="title" name="title" value="Singing Performance">
 
                                         <div class="form-group">
                                             <label for="category" class="form-label">
                                                 Category <span class="required">*</span>
                                             </label>
-                                            <select class="form-input form-select" id="category" name="category"
-                                                required>
-                                                <option value="">-- Select a category --</option>
+                                            <select class="form-input form-select" id="category" name="category" required readonly style="pointer-events: none; background-color: #f9f9f9; color: #555;">
                                                 <?php if (!empty($data['categories'])): ?>
-                                                    <?php foreach ($data['categories'] as $cat): ?>
-                                                        <option value="<?= $cat['id'] ?>">
-                                                            <?= htmlspecialchars($cat['name']) ?>
-                                                        </option>
+                                                    <?php $hasSinging = false; foreach ($data['categories'] as $cat): ?>
+                                                        <?php if (stripos($cat['name'], 'singing') !== false): $hasSinging = true; ?>
+                                                            <option value="<?= $cat['id'] ?>" selected>
+                                                                <?= htmlspecialchars($cat['name']) ?>
+                                                            </option>
+                                                        <?php endif; ?>
                                                     <?php endforeach; ?>
+                                                    <?php if (!$hasSinging): /* Fallback if active DB categories don't explicitly say 'singing' */ ?>
+                                                        <option value="<?= $data['categories'][0]['id'] ?? 1 ?>" selected>Singing</option>
+                                                    <?php endif; ?>
                                                 <?php else: ?>
-                                                    <option value="1">Singing</option>
-                                                    <option value="2">Dancing</option>
-                                                    <option value="3">Music</option>
-                                                    <option value="4">Comedy</option>
-                                                    <option value="5">Magic</option>
-                                                    <option value="6">Acting</option>
-                                                    <option value="7">Other</option>
+                                                    <option value="1" selected>Singing</option>
                                                 <?php endif; ?>
                                             </select>
                                         </div>
