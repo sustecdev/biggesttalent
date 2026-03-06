@@ -3,7 +3,8 @@ $activeSeason = function_exists('getActiveSeasonSimple') ? getActiveSeasonSimple
 $nomOpen = $activeSeason ? ($activeSeason['is_nominations_open'] ?? 1) : 1;
 ?>
 <!-- 3 Ways to Enter Section -->
-<section id="how-to-enter" class="py-24 md:py-36 bg-[#0a0a0a] relative overflow-hidden">
+<section id="how-to-enter" class="py-24 md:py-36 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black/35 pointer-events-none" aria-hidden="true"></div>
     <!-- Ambient glow -->
     <div class="absolute inset-0 pointer-events-none">
         <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-[#cd217d]/5 blur-[120px] rounded-full"></div>
@@ -15,10 +16,10 @@ $nomOpen = $activeSeason ? ($activeSeason['is_nominations_open'] ?? 1) : 1;
         <!-- Header -->
         <div class="text-center mb-16 md:mb-24">
             <p class="text-[#cd217d] text-sm font-bold uppercase tracking-[0.25em] mb-4">Your path in</p>
-            <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tight uppercase">
+            <h2 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white mb-6 tracking-tight uppercase home-section-heading">
                 <span class="text-gradient-gold">3 Ways</span> to Enter
             </h2>
-            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed">
+            <p class="text-lg md:text-xl text-gray-300 max-w-2xl mx-auto font-light leading-relaxed">
                 There's a path for every talent. Choose yours and let Africa discover you.
             </p>
         </div>
@@ -35,7 +36,7 @@ $nomOpen = $activeSeason ? ($activeSeason['is_nominations_open'] ?? 1) : 1;
                             <span class="text-[#cd217d] font-black text-xl">1</span>
                         </div>
                         <h3 class="text-lg font-black text-white mb-3 uppercase tracking-wide">Get Scouted</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">
+                        <p class="text-gray-300 text-sm leading-relaxed">
                             Our official talent scouts are searching across Africa for the next superstar.
                         </p>
                     </div>
@@ -51,7 +52,7 @@ $nomOpen = $activeSeason ? ($activeSeason['is_nominations_open'] ?? 1) : 1;
                             <span class="text-[#cd217d] font-black text-xl">2</span>
                         </div>
                         <h3 class="text-lg font-black text-white mb-3 uppercase tracking-wide">Get Nominated by Fans</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">
+                        <p class="text-gray-300 text-sm leading-relaxed">
                             Your supporters can nominate you to represent your country.
                         </p>
                     </div>
@@ -67,7 +68,7 @@ $nomOpen = $activeSeason ? ($activeSeason['is_nominations_open'] ?? 1) : 1;
                             <span class="text-[#cd217d] group-hover:text-white font-black text-xl">3</span>
                         </div>
                         <h3 class="text-lg font-black text-white mb-3 uppercase tracking-wide">Nominate Yourself</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed mb-5">
+                        <p class="text-gray-300 text-sm leading-relaxed mb-5">
                             Don't wait. Sign up, upload your performance and enter directly.
                         </p>
                         <?php if ($nomOpen): ?>

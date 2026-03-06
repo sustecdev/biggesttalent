@@ -5,7 +5,7 @@ $title = 'Register - Get SafeZonePass';
 <div class="min-h-screen flex items-center justify-center py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden login-video-container">
     <!-- Background (Biggest Talent doesn't ship loginVideo.webm, so use an existing image) -->
     <div class="absolute inset-0 z-0 bg-cover bg-center"
-        style="background-image: url('<?= URLROOT ?>/images/bg2.png');">
+        style="background-image: url('<?= URLROOT ?>/images/bg.png');">
     </div>
 
     <!-- Overlay for better readability -->

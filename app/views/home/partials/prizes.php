@@ -1,14 +1,15 @@
 <!-- Grand Prize Package Section -->
-<section id="prizes" class="py-20 bg-[#0f0f0f] relative overflow-hidden">
+<section id="prizes" class="py-20 relative overflow-hidden">
+    <div class="absolute inset-0 bg-black/35 pointer-events-none" aria-hidden="true"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="text-center max-w-3xl mx-auto mb-16">
-            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6">Grand Prize Package</h2>
-            <p class="text-lg text-gray-400">Unprecedented opportunities for Africa's biggest talents</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 home-section-heading">Grand Prize Package</h2>
+            <p class="text-lg text-gray-300">Unprecedented opportunities for Africa's biggest talents</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Top 8 Contestants -->
-            <div class="bg-gradient-to-br from-[#1a1a1a] to-[#111] rounded-3xl overflow-hidden shadow-2xl border border-white/5 p-8 sm:p-10">
+            <div class="bg-gradient-to-br from-[#1a1a1a] to-[#111] rounded-3xl overflow-hidden shadow-2xl border border-white/10 p-8 sm:p-10">
                 <h3 class="text-2xl sm:text-3xl font-bold text-[#aa843f] mb-6">Top 8 Contestants</h3>
                 <ul class="space-y-4 text-gray-300">
                     <li class="flex gap-3">
@@ -27,7 +28,7 @@
             </div>
 
             <!-- Grand Prize Winner -->
-            <div class="bg-gradient-to-br from-[#1a1a1a] to-[#111] rounded-3xl overflow-hidden shadow-2xl border border-white/5 relative">
+            <div class="bg-gradient-to-br from-[#1a1a1a] to-[#111] rounded-3xl overflow-hidden shadow-2xl border border-white/10 relative">
                 <div class="absolute inset-0 overflow-hidden">
                     <img src="images/las-vegas-stage-award-trophy-concert.jpg" alt="Grand Prize – Las Vegas stage"
                         class="w-full h-full object-cover opacity-30">

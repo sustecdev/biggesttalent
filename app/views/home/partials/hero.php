@@ -1,12 +1,7 @@
 <!-- Hero Section -->
 <section
     class="hero-section min-h-screen flex items-center justify-center relative pt-20 pb-20 md:pt-28 md:pb-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-    <!-- Hero Background Image -->
-    <div class="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style="background-image: url('<?= defined('URLROOT') ? URLROOT : '' ?>/images/Front_design.png');">
-    </div>
-    <!-- Dark overlay for content readability -->
-    <div class="absolute inset-0 bg-black/70 pointer-events-none"></div>
+    <!-- Hero Background: now on body (hero-fixed-bg) for site-wide fixed parallax -->
     <!-- Animated Blob Backgrounds (subtle) -->
     <div
         class="absolute top-[-10%] left-[-5%] w-[50%] h-[50%] min-h-[400px] bg-[#cd217d] rounded-full mix-blend-multiply filter blur-[100px] opacity-15 animate-blob pointer-events-none">

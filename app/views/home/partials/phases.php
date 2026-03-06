@@ -1,13 +1,14 @@
     <!-- Three Phases Section -->
-    <section id="phases" class="py-20 md:py-32 bg-[#0a0a0a] relative overflow-hidden">
-        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#cd217d]/50 to-transparent"></div>
+    <section id="phases" class="py-20 md:py-32 relative overflow-hidden">
+        <div class="absolute inset-0 bg-black/35 pointer-events-none" aria-hidden="true"></div>
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-[#cd217d]/50 to-transparent z-10"></div>
         
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="text-center max-w-4xl mx-auto mb-20">
-                <h2 class="text-4xl sm:text-6xl md:text-7xl font-black text-white mb-8 tracking-tighter uppercase">
+                <h2 class="text-4xl sm:text-6xl md:text-7xl font-black text-white mb-8 tracking-tighter uppercase home-section-heading">
                     Four Phases to <span class="text-gradient-gold">Glory</span>
                 </h2>
-                <p class="text-xl text-gray-400 leading-relaxed font-light">
+                <p class="text-xl text-gray-300 leading-relaxed font-light">
                     Follow the journey from nomination to becoming Africa's biggest talent
                 </p>
             </div>
@@ -25,7 +26,7 @@
                         Launch Feb 15 <span class="mx-2 opacity-50">|</span> Starts Mar 1
                     </div>
                     <h3 class="text-xl font-black text-white mb-3 uppercase tracking-wide">Nominations</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Submit your talent or nominate someone extraordinary. Showcase what makes you the biggest talent around.</p>
+                    <p class="text-gray-300 text-sm leading-relaxed">Submit your talent or nominate someone extraordinary. Showcase what makes you the biggest talent around.</p>
                     </div>
                 </div>
 
@@ -41,7 +42,7 @@
                         April 1 - April 7
                     </div>
                     <h3 class="text-xl font-black text-white mb-3 uppercase tracking-wide">National Votings</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">The African community votes for their favorites. Winners advance to compete in live battles.</p>
+                    <p class="text-gray-300 text-sm leading-relaxed">The African community votes for their favorites. Winners advance to compete in live battles.</p>
                     </div>
                 </div>
 
@@ -57,18 +58,18 @@
                         April 10 - April 27
                     </div>
                     <h3 class="text-xl font-black text-white mb-4 uppercase tracking-wide">Country Battles</h3>
-                    <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                    <div class="bg-white/10 rounded-xl p-4 border border-white/10">
                         <ul class="space-y-3 text-xs">
-                            <li class="flex justify-between items-center pb-2 border-b border-white/5">
-                                <span class="text-gray-400">Round 1 (32)</span> 
+                            <li class="flex justify-between items-center pb-2 border-b border-white/10">
+                                <span class="text-gray-300">Round 1 (32)</span> 
                                 <span class="text-white font-medium bg-white/10 px-2 py-0.5 rounded">Apr 10-17</span>
                             </li>
-                            <li class="flex justify-between items-center pb-2 border-b border-white/5">
-                                <span class="text-gray-400">Round 2 (16)</span> 
+                            <li class="flex justify-between items-center pb-2 border-b border-white/10">
+                                <span class="text-gray-300">Round 2 (16)</span> 
                                 <span class="text-white font-medium bg-white/10 px-2 py-0.5 rounded">Apr 20-27</span>
                             </li>
                             <li class="flex justify-between items-center">
-                                <span class="text-gray-400">Round 3 (8)</span> 
+                                <span class="text-gray-300">Round 3 (8)</span> 
                                 <span class="text-white font-medium bg-white/10 px-2 py-0.5 rounded">May 30</span>
                             </li>
                         </ul>
@@ -88,7 +89,7 @@
                         May 30
                     </div>
                     <h3 class="text-xl font-black text-white mb-3 uppercase tracking-wide">Big Live Show Lusaka</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Witness the ultimate showdown as Africa's finest talents compete live for the crown and ultimate recognition.</p>
+                    <p class="text-gray-300 text-sm leading-relaxed">Witness the ultimate showdown as Africa's finest talents compete live for the crown and ultimate recognition.</p>
                     </div>
                 </div>
             </div>

@@ -1,11 +1,12 @@
 <!-- Judges Section -->
-<section id="judges" class="py-4 md:py-8 bg-[#0a0a0a] relative overflow-hidden text-center">
+<section id="judges" class="py-4 md:py-8 relative overflow-hidden text-center">
+    <div class="absolute inset-0 bg-black/35 pointer-events-none" aria-hidden="true"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="max-w-4xl mx-auto mb-20">
-            <h2 class="text-4xl sm:text-6xl md:text-7xl font-black text-white mb-8 tracking-tighter uppercase">
+            <h2 class="text-4xl sm:text-6xl md:text-7xl font-black text-white mb-8 tracking-tighter uppercase home-section-heading">
                 Meet the Grand Finale <span class="text-gradient-gold">Judges</span>
             </h2>
-            <p class="text-xl text-gray-400 leading-relaxed font-light">
+            <p class="text-xl text-gray-300 leading-relaxed font-light">
                 Africa's leading experts carefully selected to evaluate talent from across the continent
             </p>
         </div>

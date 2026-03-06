@@ -42,6 +42,16 @@
     </script>
 
     <style>
+        .hero-fixed-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('<?= defined('URLROOT') ? URLROOT : '' ?>/images/bg.png');
+            background-attachment: fixed;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .home-section-heading {
+            text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
         @media (max-width :1290px) {
             .bg {
                 background-position: left !important;
@@ -98,7 +108,8 @@
 </head>
 
 <body
-    style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: #FFFFFF; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; -webkit-text-size-adjust: 100%;">
+    class="hero-fixed-bg"
+    style="color: #FFFFFF; min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; -webkit-text-size-adjust: 100%;">
     <?php if (empty($data['hide_nav'])): ?>
         <nav
             class="sticky top-0 left-0 right-0 z-[1000] bg-[rgba(10,10,10,0.98)] backdrop-blur-[20px] border-b border-white/10 shadow-[0_2px_20px_rgba(0,0,0,0.3)]">
